@@ -1,0 +1,123 @@
+;; setup graphics and window
+
+
+(sys:load "libs/external/glfw3.xtm")
+
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(bind-val window GLFWwindow*
+  (begin
+    (glfwSetErrorCallback (convert (get_native_fptr glfw_error_callback)))
+    (glfw_init_and_create_interaction_window (convert width) (convert height))))
+
+(sys:load "libs/external/nanovg.xtm")
+(bind-val vg NVGcontext* (nvg_create_context))
+(bind-val pixel_ratio float (glfw_get_pixel_ratio window))
+
+
+;; wrappers for processing like functions and vars
+;; background
+(bind-func background
+	(lambda (r:float g b)
+		  (_nvgFillColor vg (NVGcolor r g b 1.0))
+      (nvgBeginPath vg)
+      (nvgRect vg 0. 0. width height)
+      (nvgFill vg)))
+
+
+;; fill
+(bind-func fill
+	(lambda (r:float g b a)
+		(_nvgFillColor vg (NVGcolor r g b a))))     
+
+
+;;stroke
+(bind-func stroke
+	(lambda (r:float g b a)
+		(_nvgStrokeColor vg (NVGcolor r g b a))))   
+
+(bind-func stroke_width
+	(lambda (width:float)
+		(nvgStrokeWidth vg width)))
+
+
+;; circle
+(bind-func circle
+	(lambda (x:float y radius)
+		(nvgBeginPath vg)
+    (nvgCircle vg x y radius)
+    (nvgFill vg)
+    (nvgStroke vg)))
+
+(bind-func rect
+	(lambda (x:float y w h)
+		(nvgBeginPath vg)
+    (nvgRect vg x y w h)
+    (nvgFill vg)
+    (nvgStroke vg)))
+
+
+;; setup variables
+
+(bind-val x float 100.0)
+(bind-val y float 100.0)
+(bind-val xspeed float 2.5)
+(bind-val yspeed float 2.0)
+
+(set! x 4.0)
+
+
+(bind-func draw_frame
+  (let ((frame 0))
+    (lambda ()
+      ;; draw background
+ 			(background 1.0 1.0 1.0)
+
+  		;; update the ball position
+  		(set! x (+ x xspeed))
+  		(set! y (+ y yspeed))
+
+  		(if (or (> x width) (< x 0.0))
+  			(set! xspeed (* xspeed -1.0)))
+
+  		(if (or (> y height) (< y 0.0))
+  			(set! yspeed (* yspeed -1.0)))
+
+      ;; draw the ball
+      (fill 0.5 0.5 0.5 1.0)
+      (stroke 0.0 0.0 0.0 1.0)
+      (stroke_width 2.0)
+      (circle x y 48.0)
+
+			;; increment and end frame
+      (set! frame (+ frame 1)))))
+
+
+(bind-func nvg_draw_loop
+  (lambda (time:i64 delta_t:double)
+    (nvg_clear)
+    (nvgBeginFrame vg (convert width) (convert height) pixel_ratio)
+    (nvgResetTransform vg)
+    (draw_frame)
+    (nvgEndFrame vg)
+    (glfwPollEvents)
+    (glfwSwapBuffers window)    
+    (let ((next_time (+ time (convert (* 44100. delta_t)))))
+      (callback next_time nvg_draw_loop next_time delta_t))))
+
+(nvg_draw_loop (now) (/ 1. 60.))
+
+
+;; to stop the draw loop, eval this version of nvg_draw_loop
+ (bind-func nvg_draw_loop
+   (lambda (time:i64 delta_t:double)
+     (println "nvg_draw_loop callback stopped")
+     #f))
+
+
+
+
+
+
+
