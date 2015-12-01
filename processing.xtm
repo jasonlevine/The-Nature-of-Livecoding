@@ -53,6 +53,37 @@
     (nvgStroke vg)))
 
 
+;; -------VECTOR-------
+;;  functions to work with 2d vectors 
+(sys:load "libs/core/math.xtm")
+
+(bind-alias vec float*)
+
+(bind-func vec2_inc
+  (lambda (v1:vec v2:vec)
+    (vsumf v1 v2 2 v1)))
+
+(bind-func vec2_get_x
+  (lambda (v1:vec)
+    (pref v1 0)))
+
+(bind-func vec2_set_x
+  (lambda (v1:vec val:float)
+    (pset! v1 0 val)))
+
+(bind-func vec2_get_y
+  (lambda (v1:vec)
+    (pref v1 1)))
+
+(bind-func vec2_set_y
+  (lambda (v1:vec val:float)
+    (pset! v1 1 val)))
+
+(bind-func vec2_set
+  (lambda (v1:vec x:float y:float)
+    (pset! v1 0 x)
+    (pset! v1 1 y)))
+
 ;;  ------DRAW LOOP------
 ;; empty draw func to be reevaluated
 (bind-func draw
@@ -63,7 +94,7 @@
 (bind-func nvg_draw_loop
 	(let ((frame 0))
   (lambda (time:i64 delta_t:double)
-    (nvg_clear)
+    ;(nvg_clear)
     (nvgBeginFrame vg (convert width) (convert height) pixel_ratio)
     (nvgResetTransform vg)
     (draw)

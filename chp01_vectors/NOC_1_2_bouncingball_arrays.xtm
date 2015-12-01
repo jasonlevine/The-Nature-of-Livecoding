@@ -1,0 +1,36 @@
+;; setup window dims
+
+(bind-val width float 200.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+
+;; setup variables
+
+(bind-val location |2,float|)
+(bind-val velocity |2,float|)
+
+(call-as-xtlang (afill! location 100. 100.))
+(call-as-xtlang (afill! velocity 2. 2.5))
+
+
+(bind-func draw
+    (lambda ()
+      ;; draw background
+ 			(background 1.0 1.0 1.0)
+
+  		;; update the ball position
+  		(aset! location 0 (+ (aref location 0) (aref velocity 0)))
+  		(aset! location 1 (+ (aref location 1) (aref velocity 1)))
+
+  		(if (or (> (aref location 0) width) (< (aref location 0) 0.0))
+  			(aset! velocity 0 (* (aref velocity 0) -1.0)))
+
+  		(if (or (> (aref location 1) width) (< (aref location 1) 0.0))
+  			(aset! velocity 1 (* (aref velocity 1) -1.0)))
+
+      ;; draw the ball
+      (fill 0.68 0.68 0.68 1.0)
+      (stroke 0.0 0.0 0.0 1.0)
+      (stroke_width 2.0)
+      (circle (aref location 0) (aref location 1) 48.0)))
