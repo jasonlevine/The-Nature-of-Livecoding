@@ -106,6 +106,10 @@
     (pset! v1 0 (* (pref v1 0) scale))
     (pset! v1 1 (* (pref v1 1) scale))))
 
+(bind-func vec2_mag
+  (lambda (v1:vec)
+    (vmagf v1 2)))
+
 ;; Transformations
 (bind-func translate
   (lambda (x:float y)
