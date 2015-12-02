@@ -1,0 +1,34 @@
+;// The Nature of Code
+;// Daniel Shiffman
+;// Draft book
+;
+;// Example 1-4: Vector muliplication
+;; Ported to Extempore by Jason Levine
+
+;; setup window dims
+
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+
+;; setup variables
+(bind-val mouse_pos vec 2)
+(bind-val center vec 2)
+
+(call-as-xtlang (vec2_set center (/ width 2.) (/ height 2.)))
+
+;; draw loop
+(bind-func draw
+    (lambda ()
+    	(background 1.0 1.0 1.0)
+
+    	(vec2_set mouse_pos (mouse_x) (mouse_y))
+    	(vec2_dec mouse_pos center)
+        (vec2_scale mouse_pos 0.5)
+
+    	(translate (/ width 2.) (/ height 2.))
+    	(stroke_width 2.)
+    	(stroke 0. 0. 0. 1.)
+    	(line 0. 0. (vec2_get_x mouse_pos) (vec2_get_y mouse_pos))))
+
