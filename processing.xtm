@@ -45,11 +45,21 @@
     (nvgFill vg)
     (nvgStroke vg)))
 
+;; rectangle
 (bind-func rect
 	(lambda (x:float y w h)
 		(nvgBeginPath vg)
     (nvgRect vg x y w h)
     (nvgFill vg)
+    (nvgStroke vg)))
+
+;; line
+(bind-func line
+  (lambda (x1:float y1 x2 y2)
+    (nvgBeginPath vg)
+    (nvgMoveTo vg x1 y1)
+    (nvgLineTo vg x2 y2)
+    (nvgClosePath vg)
     (nvgStroke vg)))
 
 
@@ -62,6 +72,10 @@
 (bind-func vec2_inc
   (lambda (v1:vec v2:vec)
     (vsumf v1 v2 2 v1)))
+
+(bind-func vec2_dec
+  (lambda (v1:vec v2:vec)
+    (vsubf v1 v2 2 v1)))
 
 (bind-func vec2_get_x
   (lambda (v1:vec)
@@ -84,13 +98,35 @@
     (pset! v1 0 x)
     (pset! v1 1 y)))
 
+;; Transformations
+(bind-func translate
+  (lambda (x:float y)
+    (nvgTranslate vg x y)))
+
+
+;; ------MOUSE------
+(bind-func mouse_x
+  (lambda ()
+    (let ((x_ptr:double* (salloc))
+          (y_ptr:double* (salloc)))
+      (glfwGetCursorPos window x_ptr y_ptr)
+      (convert (pref x_ptr 0) float))))
+
+(bind-func mouse_y
+  (lambda ()
+    (let ((x_ptr:double* (salloc))
+          (y_ptr:double* (salloc)))
+      (glfwGetCursorPos window x_ptr y_ptr)
+      (convert (pref y_ptr 0) float))))
+
+
 ;;  ------DRAW LOOP------
 ;; empty draw func to be reevaluated
 (bind-func draw
     (lambda ()
     	(background 0.0 0.0 0.0)))
 
-;; draw loop
+; draw loop
 (bind-func nvg_draw_loop
 	(let ((frame 0))
   (lambda (time:i64 delta_t:double)
@@ -104,6 +140,49 @@
     (glfwSwapBuffers window) 
     (let ((next_time (+ time (convert (* 44100. delta_t)))))
       (callback next_time nvg_draw_loop next_time delta_t)))))
+
+;; another attempt to schemify my draw loop to allow (play) and to avoid pauses in animation when reompiling. Failed.
+; (define draw
+;     (lambda ()
+;       (background 1.0 0.0 0.0)))
+
+; (bind-func nvg_begin
+;   (lambda ()
+;     (nvgBeginFrame vg (convert width) (convert height) pixel_ratio)
+;     (nvgResetTransform vg)))
+
+; (bind-func nvg_end
+;   (lambda ()
+;     (nvgEndFrame vg)))
+
+; (define nvg_draw_loop
+;   (let ((frame 0))
+;   (lambda (time delta_t)
+;     (nvg_begin)
+;     (draw)
+;     (nvg_end)
+;     (set! frame (+ frame 1)) 
+;     (let ((next_time (+ time (* 44100. delta_t))))
+;       (callback next_time nvg_draw_loop next_time delta_t)))))
+
+
+;; an attempt to avoid to freeze when draw is recompiled. didn't work
+; (bind-func nvg_draw_frame
+;   (lambda ()
+;     (nvgBeginFrame vg (convert width) (convert height) pixel_ratio)
+;     (nvgResetTransform vg)
+;     (draw)
+;     (nvgEndFrame vg)
+;     (glfwPollEvents)
+;     (glfwSwapBuffers window)))
+
+; (define nvg_draw_loop
+;   (let ((frame 0))
+;   (lambda (time delta_t)
+;     (nvg_draw_frame)
+;     (set! frame (+ frame 1)) 
+;     (let ((next_time (+ time (* 44100. delta_t))))
+;       (callback next_time nvg_draw_loop next_time delta_t)))))
 
 ;;start draw loop
 (nvg_draw_loop (now) (/ 1. 60.))
