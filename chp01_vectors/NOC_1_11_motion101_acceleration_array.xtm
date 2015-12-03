@@ -1,0 +1,83 @@
+; /**
+;  * Acceleration with Vectors 
+;  * by Daniel Shiffman.  
+;  * 
+;  * Demonstration of the basics of motion with vector.
+;  * A "Mover" object stores location, velocity, and acceleration as vectors
+;  * The motion is controlled by affecting the acceleration (in this case towards the mouse)
+;  */
+;; Ported to Extempore by Jason Levine
+;; setup window dims
+
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+
+;; make mover closure
+(bind-func make-mover
+	(lambda ()
+		(let ((location:vec (zalloc 2))
+					(velocity:vec (zalloc 2))
+					(acceleration:vec (zalloc 2))
+					(top_speed:float 5.))
+
+					(vec2_set location (* width 0.5) (* height 0.5))
+					(vec2_set velocity 0. 0.)
+					
+		(lambda ()
+			;;update position and velocity
+
+			;;get acceleration from mouse pos
+			(let ((mouse_pos:vec (zalloc 2)))
+				(vec2_set mouse_pos (mouse_x) (mouse_y))
+				(vec2_dec mouse_pos location)
+				(vec2_normalize mouse_pos)
+				(vec2_scale mouse_pos 0.2)
+				(vec2_set acceleration (vec2_get_x mouse_pos) (vec2_get_y mouse_pos)))
+
+			(vec2_inc velocity acceleration)
+			(vec2_limit velocity top_speed)
+			(vec2_inc location velocity)
+
+			;;check bounds. wrap around
+			(if (> (vec2_get_x location) width) 
+				(vec2_set_x location 0.))
+
+			(if (< (vec2_get_x location) 0.) 
+				(vec2_set_x location width))
+
+			(if (> (vec2_get_y location) height) 
+				(vec2_set_y location 0.))
+
+			(if (< (vec2_get_y location) 0.) 
+				(vec2_set_y location height))
+
+			;;display mover
+			(stroke 0.0 0.0 0.0 1.0)
+			(stroke_width 2.0)
+			(fill 0.5 0.5 0.5 1.0)
+			(circle (vec2_get_x location) (vec2_get_y location) 48.0)))))
+
+
+;; setup variables
+
+(bind-val movers [i64]* 20)
+(bind-val movers1 [void]* 20)
+
+
+(bind-func init_movers
+	(lambda ()
+	 (let ((i:i64 0))
+			(dotimes (i 20)
+				(pset! movers1 i (make-mover))))))
+
+
+;; draw loop
+(bind-func draw
+    (lambda ()
+    	(background 1.0 1.0 1.0)
+
+    	(let ((i:i64 0))
+				(dotimes (i 20)
+					(pref movers i)))))
