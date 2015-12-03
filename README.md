@@ -13,13 +13,13 @@ Could I finally get the same transcendant buzz I get from performing... from cod
 So Impromptu became Extempore, the first language built from the ground up for livecoding.  I shared two goals with Extempore,
 the experience of interactive programming, and high-performance computing.  So I began to righteously learn this language, only
 to find that it was quite difficult and nothing like any language I had worked with before. So after two years of dabbling I decided
-that I needed a project to learn to learn to nitty gritty of this sorcerous language.
+that I needed a project to learn the nitty gritty of this sorcerous language.
 
-I chose to port The Nature of Code for many reasons:
+I chose to port *The Nature of Code* for many reasons:
 
 1. Its awesome. The examples are endlessly inspiring.
 2. Its one thing to change the color of circle while code is running, and its another to change the behavior of an autonomous agent or process. This kind of expression through algorithm modification is the buzz that I'm chasing. 
-3. Its written in Processing, which is Java, which is object-oriented, which is the way that I am used to thinking. Extempore is functional and procedural.  This means rethinking how data and functions are organized. And that means **learning**
+3. Its written in Processing, which is Java, which is object-oriented, which is the way that I am used to thinking. Extempore is functional and procedural.  This means rethinking how data and functions are organized. And that means *learning*
 4. Usability.  Right now, you can go ahead download Extempore and my code, and start following The Nature of Code using Extempore instead of Processing. And believe me, interactively programming these examples is fun.
 5. Teaching. When teaching beginners to code creatively, the two biggest problems I have are syntax and the connection between the code and the output of the program.  Extempore is a Lisp, so it has almost no syntax, and you can watch the output of the program change AS you change 
 the code. Can't wait to give a workshop!
