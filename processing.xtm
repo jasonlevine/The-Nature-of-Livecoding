@@ -62,6 +62,16 @@
     (nvgClosePath vg)
     (nvgStroke vg)))
 
+;;--------RANDOM-------
+
+(bind-func rand_range
+  (lambda (min:float max)
+    (+ (* (random) (- max min)) min)))
+
+(bind-func rand_max
+  (lambda (max:float)
+    (* (random) max)))
+
 
 ;; -------VECTOR-------
 ;;  functions to work with 2d vectors 
@@ -113,6 +123,12 @@
 (bind-func vec2_normalize
   (lambda (v1:vec)
     (vnormf v1 2 v1)))
+
+(bind-func vec2_limit
+  (lambda (v1:vec limit:float)
+    (if (> (vec2_mag v1) limit)
+      (begin (vec2_normalize v1)
+            (vec2_scale v1 limit)))))
 
 ;; Transformations
 (bind-func translate

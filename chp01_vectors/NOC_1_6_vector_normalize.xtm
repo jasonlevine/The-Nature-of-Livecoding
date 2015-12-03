@@ -27,8 +27,8 @@
 
     	(vec2_set mouse_pos (mouse_x) (mouse_y))
     	(vec2_dec mouse_pos center)
-        (vec2_norm mouse_pos)
-    	(vec2_mult mouse_pos 150.)
+        (vec2_normalize mouse_pos)
+    	(vec2_scale mouse_pos 150.)
 
     	(translate (/ width 2.) (/ height 2.))
     	(stroke_width 2.)
