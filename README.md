@@ -1,4 +1,4 @@
-This is a personal project to ported the wonderful examples from Daniel Shiffman's book The Nature of Code -> natureofcode.com
+This is a personal project to ported the wonderful examples from Daniel Shiffman's book The Nature of Code -> http://natureofcode.com
 to Andrew Sorenson's Extempore livecoding language -> http://extempore.moso.com.au/
 
 But why?
@@ -16,7 +16,7 @@ to find that it was quite difficult and nothing like any language I had worked w
 that I needed a project to learn to learn to nitty gritty of this sorcerous language.
 
 I chose to port The Nature of Code for many reasons:
-1) Its awesome. The examples are endlessly inspiring.
+1) Its awesome. The examples are endlessly inspiring.\n
 2) Its one thing to change the color of circle while code is running, and its another to change the behavior of an autonomous agent 
 or process. This kind of expression through algorithm modification is what I'm chasing.
 3) Its written in Processing which is Java, which is object-oriented, the way that I am used to thinking. 
