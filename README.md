@@ -16,20 +16,20 @@ to find that it was quite difficult and nothing like any language I had worked w
 that I needed a project to learn to learn to nitty gritty of this sorcerous language.
 
 I chose to port The Nature of Code for many reasons:
-1) Its awesome. The examples are endlessly inspiring.\n
-2) Its one thing to change the color of circle while code is running, and its another to change the behavior of an autonomous agent 
+1. Its awesome. The examples are endlessly inspiring.
+2. Its one thing to change the color of circle while code is running, and its another to change the behavior of an autonomous agent 
 or process. This kind of expression through algorithm modification is what I'm chasing.
-3) Its written in Processing which is Java, which is object-oriented, the way that I am used to thinking. 
+3. Its written in Processing which is Java, which is object-oriented, the way that I am used to thinking. 
 Extempore is functional and procedural.  This means rethinking how data and functions are organized. And that means *learning*
-4) Usability.  Right now, you can go ahead download Extempore and my code, and start following The Nature of Code using Extempore
+4. Usability.  Right now, you can go ahead download Extempore and my code, and start following The Nature of Code using Extempore
 instead of Processing. And believe me, interactively programming these examples is fun.
-5) Teaching. The two biggest problem I have when teaching beginners to code creatively are syntax and the connection between the code and
+5. Teaching. The two biggest problem I have when teaching beginners to code creatively are syntax and the connection between the code and
 the output of the program.  Extempore is a Lisp, so it has almost no syntax, and you can watch the output of the program change AS you change 
 the code. Can't wait to give a workshop!
 
 
 "OK OK! Enough with the intro.... how do I use it"
 
-Step 1 - Go to http://extempore.moso.com.au/ and follow the instructions to install extempore for your OS/text editor
-Step 2 - Clone my code and place it in  /usr/local/Cellar/extempore/HEAD/share/extempore 
-Step 3 - Start up Extempore and start evaluating code!
+1. Go to http://extempore.moso.com.au/ and follow the instructions to install extempore for your OS/text editor
+2. Clone my code and place it in  /usr/local/Cellar/extempore/HEAD/share/extempore 
+3. Start up Extempore and start evaluating code!
