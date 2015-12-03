@@ -110,6 +110,10 @@
   (lambda (v1:vec)
     (vmagf v1 2)))
 
+(bind-func vec2_normalize
+  (lambda (v1:vec)
+    (vnormf v1 2 v1)))
+
 ;; Transformations
 (bind-func translate
   (lambda (x:float y)

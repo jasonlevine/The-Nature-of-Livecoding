@@ -1,8 +1,10 @@
-;// The Nature of Code
-;// Daniel Shiffman
-;// Draft book
-;
-;// Example 1-4: Vector muliplication
+;/**
+; * Normalize 
+; * by Daniel Shiffman.  
+; * 
+; * Demonstration of normalizing a vector.
+; * Normalizing a vector sets its length to 1.
+; */
 ;; Ported to Extempore by Jason Levine
 
 ;; setup window dims
@@ -25,11 +27,8 @@
 
     	(vec2_set mouse_pos (mouse_x) (mouse_y))
     	(vec2_dec mouse_pos center)
-
-    	(let ((m:float (vec2_mag mouse_pos)))
-    		(fill 0.0 0.0 0.0 1.0)
-    		(stroke 0.0 0.0 0.0 0.0)
-        (rect 0. 0. m 10.))
+        (vec2_norm mouse_pos)
+    	(vec2_mult mouse_pos 150.)
 
     	(translate (/ width 2.) (/ height 2.))
     	(stroke_width 2.)
