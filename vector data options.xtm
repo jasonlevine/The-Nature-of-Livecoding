@@ -1,0 +1,28 @@
+
+(bind-val my_vec2f float* 2) ;; declare and allocate memory
+(pfill! my_vec2f 0.0 0.0)    ;; initialize with values
+(pset! my_vec2f 0 0.5)       ;; set x to 0.5
+(pref my_vec2f 1)						 ;; get the value of y
+
+(bind-val my_vec2f |2,float|);; declare
+(afill! my_vec2f 0.0 0.0)    ;; initialize with values
+(aset! my_vec2f 0 0.5)       ;; set x to 0.5
+(aref my_vec2f 1)						 ;; get the value of y
+
+(bind-val my_vec2f <float,float>) ;; declare
+(tfill! my_vec2f 0.0 0.0)    ;; initialize with values
+(tset! my_vec2f 0 0.5)       ;; set x to 0.5
+(tref my_vec2f 1)						 ;; get the value of y
+
+(bind-func make-vec2f                ;; bind a function
+	(lambda (_x:float _y:float)        ;; that takes 2 float arguments
+		(let ((x:float _x) (y:float _y)) ;; assigns them to two "local" variables 
+			(lambda ()										 ;; returns a function 
+				0))))												 ;; that returns 0
+
+(bind-func my_vec2f (make-vec2f 0.0 0.0)) 
+;; bind a function called my_vec2f to the function 
+;; returned from make-vec2f and init the values
+
+(my_vec2f.x 0.5) ;; set x to 0.5
+(my_vec2f.y)     ;; get the value of y 

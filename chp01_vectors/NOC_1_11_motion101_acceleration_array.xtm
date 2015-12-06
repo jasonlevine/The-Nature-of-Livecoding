@@ -22,12 +22,10 @@
 					(acceleration:vec (zalloc 2))
 					(top_speed:float 5.))
 
-					(vec2_set location (* width 0.5) (* height 0.5))
+					(vec2_set location (rand_max width) (rand_max height))
 					(vec2_set velocity 0. 0.)
 					
 		(lambda ()
-			;;update position and velocity
-
 			;;get acceleration from mouse pos
 			(let ((mouse_pos:vec (zalloc 2)))
 				(vec2_set mouse_pos (mouse_x) (mouse_y))
@@ -36,6 +34,7 @@
 				(vec2_scale mouse_pos 0.2)
 				(vec2_set acceleration (vec2_get_x mouse_pos) (vec2_get_y mouse_pos)))
 
+			;;update position and velocity
 			(vec2_inc velocity acceleration)
 			(vec2_limit velocity top_speed)
 			(vec2_inc location velocity)
@@ -61,23 +60,20 @@
 
 
 ;; setup variables
-
-(bind-val movers [i64]* 20)
-(bind-val movers1 [void]* 20)
-
+(bind-val movers |20,[void]*|)
 
 (bind-func init_movers
 	(lambda ()
-	 (let ((i:i64 0))
-			(dotimes (i 20)
-				(pset! movers1 i (make-mover))))))
+		(doloop (i 20)
+			(aset! movers i (make-mover)))))
+
+(init_movers)
 
 
 ;; draw loop
 (bind-func draw
     (lambda ()
     	(background 1.0 1.0 1.0)
-
-    	(let ((i:i64 0))
-				(dotimes (i 20)
-					(pref movers i)))))
+				(doloop (i 20)
+			   	((aref movers i)))))
+			

@@ -1,0 +1,48 @@
+;; some closure that takes no argument and returns an i64
+(bind-func no_arg_closure
+    (lambda ()
+        0))
+;;the closure that takes no argument and returns some closure. This is what will be stored in the array
+(bind-func no_arg_closure_c
+    (lambda()
+        no_arg_closure))
+
+
+
+(bind-val array_c |2,[[i64]*]*|* (zalloc))
+
+(bind-func fill_array_c_with_closures
+  (lambda ()
+    (pset! array_c 0 no_arg_closure_c)
+    (pset! array_c 1 no_arg_closure_c)))
+
+
+(fill_array_c_with_closures)
+
+(bind-func fill_array_with_closures
+  (lambda ()
+    (let ((array_out:|2,[[i64]*]*|* (zalloc)))
+      (pset! array_out 0 no_arg_closure_c)
+      (pset! array_out 1 no_arg_closure_c)
+      array_out)))
+
+;; returns the first element of an array of 2 closures
+(bind-func test0
+    (lambda ()
+            (aref (fill_array_with_closures) 0)))
+
+(bind-func test1
+    (lambda ()
+            (aref (fill_array_with_closures) 1)))
+
+
+(bind-func test0
+    (lambda ()
+            (aref array_c 0)))
+
+(bind-func test1
+    (lambda ()
+            (aref array_c 1)))
+
+(test0)
+(test1)
