@@ -46,12 +46,12 @@
     (nvgStroke vg)))
 
 ;; rectangle
-(bind-func rect
-	(lambda (x:float y w h)
-		(nvgBeginPath vg)
-    (nvgRect vg x y w h)
-    (nvgFill vg)
-    (nvgStroke vg)))
+;(bind-func rect
+;	(lambda (x:float y w h)
+;		(nvgBeginPath vg)
+;    (nvgRect vg x y w h)
+;    (nvgFill vg)
+;    (nvgStroke vg)))
 
 ;; line
 (bind-func line
@@ -105,11 +105,11 @@
 ;;vector arithmetic
 (bind-func vec2_inc
   (lambda (v1:vec v2:vec)
-    (vsumf v1 v2 2 v1)))
+    (vvsumf v1 v2 2 v1)))
 
 (bind-func vec2_dec
   (lambda (v1:vec v2:vec)
-    (vsubf v1 v2 2 v1)))
+    (vvsubf v1 v2 2 v1)))
 
 (bind-func vec2_scale
   (lambda (v1:vec scale:float)
@@ -122,13 +122,13 @@
 
 (bind-func vec2_normalize
   (lambda (v1:vec)
-    (vnormf v1 2 v1)))
+    (vnormalisef v1 2 v1)))
 
 (bind-func vec2_limit
   (lambda (v1:vec limit:float)
     (if (> (vec2_mag v1) limit)
       (begin (vec2_normalize v1)
-            (vec2_scale v1 limit)))))
+            (vec2_scale v1 limit)) 0.)))
 
 ;; Transformations
 (bind-func translate
