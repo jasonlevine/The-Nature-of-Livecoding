@@ -1,0 +1,68 @@
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+;(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_1_forces/mover.xtm")
+
+;;setup and initialize vars
+
+(bind-val location vec 2)
+(bind-val velocity vec 2)
+(bind-val acceleration vec 2)
+(bind-val mass float)
+
+(bind-func init_mover
+  (lambda ()
+    (vec2_set location 30. 30.)
+    (vec2_set velocity 0. 0.)
+    (vec2_set acceleration 0. 0.)
+    (set! mass 1.0:float)))
+
+(xtmX (init_mover))
+
+(bind-func apply_force
+  (lambda (force:vec)
+    (vec2_div force mass)
+    (vec2_inc acceleration force)))
+
+(bind-func update
+  (lambda ()
+    (vec2_inc velocity acceleration)
+    (vec2_inc location velocity)
+    (vec2_scale acceleration 0.)))
+
+(bind-func display
+  (lambda ()
+    (stroke 0. 0. 0. 1.)
+    (stroke_width 2.)
+    (fill 0.5 0.5 0.5 1.0)
+    (circle (vec2_get_x location) (vec2_get_y location) 48.)))
+
+(bind-func check_edges
+  (lambda ()
+    (if (or (> (vec2_get_x location) width) (< (vec2_get_x location) 0.0))
+        (vec2_set_x velocity (* (vec2_get_x velocity) -1.0)))
+
+    (if (or (> (vec2_get_y location) height) (< (vec2_get_y location) 0.0))
+      (vec2_set_y velocity (* (vec2_get_y velocity) -1.0)))
+    void))
+
+
+(bind-func draw
+  (lambda ()
+    (background 1.0 1.0 1.0)
+
+    (let ((wind:vec (salloc 2))
+          (gravity:vec (salloc 2)))
+      (vec2_set wind 0.01 0.0)
+      (vec2_set gravity 0.0 0.1)
+
+      (apply_force  wind)
+      (apply_force  gravity))
+
+    (update )
+    (display )
+    (check_edges)))
+
+
+
