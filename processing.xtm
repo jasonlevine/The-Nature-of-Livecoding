@@ -46,12 +46,12 @@
     (nvgStroke vg)))
 
 ;; rectangle
-;(bind-func rect
-;	(lambda (x:float y w h)
-;		(nvgBeginPath vg)
-;    (nvgRect vg x y w h)
-;    (nvgFill vg)
-;    (nvgStroke vg)))
+(bind-func rectangle
+	(lambda (x:float y w h)
+		(nvgBeginPath vg)
+    (nvgRect vg x y w h)
+    (nvgFill vg)
+    (nvgStroke vg)))
 
 ;; line
 (bind-func line
@@ -115,6 +115,11 @@
   (lambda (v1:vec scale:float)
     (pset! v1 0 (* (pref v1 0) scale))
     (pset! v1 1 (* (pref v1 1) scale))))
+
+(bind-func vec2_div
+  (lambda (v1:vec scale:float)
+    (pset! v1 0 (/ (pref v1 0) scale))
+    (pset! v1 1 (/ (pref v1 1) scale))))
 
 (bind-func vec2_mag
   (lambda (v1:vec)

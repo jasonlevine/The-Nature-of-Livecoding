@@ -1,0 +1,30 @@
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_1_forces/mover.xtm")
+
+;;setup and initialize vars
+(init_mover)
+
+
+
+(bind-func draw
+	(lambda ()
+		(background 1.0 1.0 1.0 1.0)
+
+		(let ((wind:vec (salloc 2))
+					(gravity:vec (salloc 2)))
+			(vec2_set wind 0.01 0.0)
+			(vec2_set gravity 0.0 0.1)
+
+			(apply_force wind)
+			(apply_force gravity)
+
+			(update)
+			(display)
+			(check_edges))))
+
+
+
+
