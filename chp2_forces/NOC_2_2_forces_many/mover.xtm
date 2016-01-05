@@ -10,8 +10,8 @@
          (velocity (zalloc 2))
          (accel (zalloc 2)))
       (pfill! location x y)
-      (pfill! velocity 0. 0.)
-      (pfill! accel 0. 0.)
+      (pfill! velocity 0.0:float 0.0:float)
+      (pfill! accel 0.0:float 0.0:float)
       (Mover location velocity accel mass))))
 
 ;; Overload the default constructor
