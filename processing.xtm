@@ -12,25 +12,53 @@
 
 
 ;; wrappers for processing like functions and vars
+
 ;; background
-(bind-func background
-	(lambda (r:float g b)
-		  (_nvgFillColor vg (NVGcolor r g b 1.0))
+(bind-func background_gray
+	(lambda (gray:i8)
+    (let ((grayf:float  (/ (i8tof gray) 255.)))
+		  (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))
+    (nvgBeginPath vg)
+    (nvgRect vg 0. 0. width height)
+    (nvgFill vg)))
+
+(bind-func background_RGBf
+  (lambda (r:float g b)
+      (_nvgFillColor vg (NVGcolor r g b 1.0))
       (nvgBeginPath vg)
       (nvgRect vg 0. 0. width height)
       (nvgFill vg)))
 
+(bind-poly background background_RGBf)
+(bind-poly background background_gray)
 
 ;; fill
-(bind-func fill
+(bind-func fill_RGBAf
 	(lambda (r:float g b a)
-		(_nvgFillColor vg (NVGcolor r g b a))))     
+		(_nvgFillColor vg (NVGcolor r g b a))))    
 
+(bind-func fill_gray
+  (lambda (gray:i8)
+     (let ((grayf:float  (/ (i8tof gray) 255.)))
+      (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))))
+  
+
+(bind-poly fill fill_RGBAf)
+(bind-poly fill fill_gray)
+
+
+(bind-func no_fill
+  (lambda ()
+    (fill 0.0 0.0 0.0 0.0)))
 
 ;;stroke
 (bind-func stroke
 	(lambda (r:float g b a)
 		(_nvgStrokeColor vg (NVGcolor r g b a))))   
+
+(bind-func no_stroke
+  (lambda ()
+    (stroke 0.0 0.0 0.0 0.0)))
 
 (bind-func stroke_width
 	(lambda (width:float)

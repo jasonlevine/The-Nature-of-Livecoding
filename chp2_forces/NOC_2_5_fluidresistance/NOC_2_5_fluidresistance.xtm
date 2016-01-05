@@ -1,0 +1,47 @@
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_5_fluidresistance/mover.xtm")
+(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_5_fluidresistance/liquid.xtm")
+
+;;setup and initialize vars
+(bind-val movers |11,Mover*|*)
+(bind-val liquid Liquid*)
+
+(bind-func setup
+	(lambda ()
+		(doloop (i 11:i64)
+			(aset! movers i (Mover (rand_range 1.0 4.0) (rand_max width) 0.)))
+
+		(set! liquid (Liquid 0. (/ height 2.) width (/ height 2.) 0.1))
+		void))
+
+(setup)
+
+
+(bind-func draw
+	(lambda ()
+		(background 1.0 1.0 1.0)
+
+		;; Draw water
+		(display liquid)
+
+		(doloop (i 11)
+
+			;; Is the Mover in the liquid?
+			(if (contains liquid (aref movers i))
+				;; Calculate drag force
+				(let ((drag_force:vec (salloc 2)))
+					(vec2_set drag_force (drag liquid (aref movers i)))
+					;;Apply drag force to Mover
+					(apply_force (aref movers i) drag_force)))
+
+			;; Gravity is scaled by mass here!
+			(let ((gravity:vec (salloc 2)))
+				(vec2_set gravity 0.0 (* 0.1 (tref (aref movers i) 3)))
+				(apply_force (aref movers i) gravity))
+
+			(update (aref movers i))
+			(display (aref movers i))
+			(check_edges (aref movers i))))))
