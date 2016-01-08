@@ -1,0 +1,60 @@
+	; /**
+;  * Forces (Gravity and Fluid Resistence) with Vectors 
+;  * by Daniel Shiffman.  
+;  * 
+;  * Demonstration of multiple force acting on bodies (Mover class)
+;  * Bodies experience gravity continuously
+;  * Bodies experience fluid resistance when in "water"
+;  */
+;  Ported to Extempore by Jason Levine
+ 
+; // Liquid is a rectangle
+; float x,y,w,h;
+; // Coefficient of drag
+; float c;
+(bind-type Liquid <float,float,float,float,float>)
+
+;; Is the Mover in the Liquid?
+(bind-func contains
+	(lambda (l:Liquid* m:Mover*)
+		(let ((loc_x:float (pref (tref m 0) 0))
+					(loc_y:float (pref (tref m 0) 1))
+					(liq_x:float (tref l 0))
+					(liq_y:float (tref l 1))
+					(liq_w:float (tref l 2))
+					(liq_h:float (tref l 3)))
+
+			(and (> loc_x liq_x) 
+				(< loc_x (+ liq_x liq_w)) 
+				(> loc_y liq_y) 
+				(< loc_y (+ liq_y liq_h))))))
+
+;; Calculate drag force
+(bind-func drag
+	(lambda (l:Liquid* m:Mover*)
+		(let ((velocity:vec (salloc 2)))
+			(vec2_set velocity (tref m 1))
+
+			;; Magnitude is coefficient * speed squared
+			(let* ((coefficient:float (tref l 4))
+						(speed:float (vec2_mag velocity))
+						(drag_magnitude:float (* coefficient speed speed))
+						(drag_force:vec (zalloc 2)))
+
+				;; Direction is inverse of velocity
+				(vec2_set drag_force velocity)
+				(vec2_scale drag_force -1.)
+
+				;; Scale according to magnitude
+				(vec2_normalize drag_force)
+				(vec2_scale drag_force drag_magnitude)
+				drag_force))))
+
+
+(bind-func display_liquid
+	(lambda (l:Liquid*)
+		(no_stroke)
+		(fill 50)
+		(rectangle (tref l 0) (tref l 1) (tref l 2) (tref l 3))))
+
+(bind-poly display display_liquid)
