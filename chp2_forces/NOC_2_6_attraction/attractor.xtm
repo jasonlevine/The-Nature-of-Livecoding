@@ -1,0 +1,134 @@
+; // Attraction
+; // Daniel Shiffman <http://www.shiffman.net>
+
+; // A class for a draggable attractive body in our world
+
+; class Attractor {
+;   float mass;    // Mass, tied to size
+;   float G;       // Gravitational Constant
+;   PVector location;   // Location
+;   boolean dragging = false; // Is the object being dragged?
+;   boolean rollover = false; // Is the mouse over the ellipse?
+;   PVector dragOffset;  // holds the offset for when object is clicked on
+
+(bind-type Attractor <float,float,vec,i1,i1,vec>)
+
+(bind-func Attractor_Constructor:[Attractor*,void]*
+	(lambda ()
+		(let ((location:vec (salloc 2))
+					(mass:float 20.)
+					(G:float 1.)
+					(drag_offset:vec (salloc 2)))
+			(vec2_set location (/ width 2.) (/ height 2.))
+			(vec2_set drag_offset 0. 0.)
+			(Attractor mass G location 0 0 drag_offset))))
+
+(bind-poly Attractor Attractor_Constructor)
+
+(bind-func attract
+	(lambda (a:Attractor* m:Mover*)
+		(let ((force:vec (salloc 2))
+					(a_location:vec (salloc 2))
+					(m_location:vec (salloc 2)))
+
+			(vec2_set a_location (tref a 2))
+			(vec2_set m_location (tref m 0))
+			(vec2_set force (vec2_sub a_location m_location))
+
+			(let ((d:float (vec2_mag force))
+						(a_mass:float (tref a 0))
+						(m_mass:float (tref m 3))
+						(G:float (tref a 1)))
+
+				(set! d (constrain d 5. 25.))
+				(vec2_normalize force)
+
+				(let ((strength:float (/ (* G a_mass m_mass) (* d d))))
+					(vec2_scale force strength)
+					force)))))
+
+(bind-func display_attractor
+	(lambda (a:Attractor*)
+		(stroke_width 4.)
+		(stroke 0)
+
+		(let ((mass:float (tref a 1))
+					(dragging:i1 (tref a 3))
+					(rollover:i1 (tref a 4))
+					(location:vec (salloc 2)))
+			(vec2_set location (tref a 2))
+			
+			(cond ((dragging) (fill 50))
+						((rollover) (fill 100))
+						(else (fill 175 200)))
+
+			(circle location (* mass 2.)))))
+
+(bind-poly display display_attractor)
+
+
+;; The methods below are for mouse interaction
+
+(bind-func clicked
+	(lambda (a:Attractor* mx:float my)
+		(let ((location:vec (salloc 2))
+					(mass:float (tref a 0))
+					(dragging:i1 (tref a 3))
+					(drag_offset:vec (salloc 2)))
+			(vec2_set location (tref a 2))
+			(vec2_set drag_offset (tref a 5))
+
+			(let ((d:float (distance mx my (vec2_get_x location) (vec2_get_y location))))
+				
+				(if (< d mass) 
+					(begin
+						(set! dragging 1)
+						(vec2_set drag_offset 
+							(- (vec2_get_x location) mx)
+							(- (vec2_get_y location) my))))
+				void))))
+
+(bind-func hover
+	(lambda (a:Attractor* mx:float my)
+		(let ((location:vec (salloc 2))
+					(mass:float (tref a 0))
+					(rollover:i1 (tref a 4)))
+			(vec2_set location (tref a 2))
+
+			(let ((d:float (dist mx my (vec2_get_x location) (vec2_get_y location))))
+				
+				(if (< d mass) 
+					(set! rollover 1)
+					(set! rollover 0))))))
+
+(bind-func stop_dragging
+	(lambda (a:Attractor*)
+		(tset! a 3 0)))
+
+(bind-func drag
+	(lambda (a:Attractor* mx:float my)
+			(let ((location:vec (salloc 2))
+					(drag_offset:vec (salloc 2)))
+				(vec2_set location (tref a 2))
+				(vec2_set drag_offset (tref a 5))
+
+				(vec2_set_x location (+ mx (vec2_get_x drag_offset)))
+				(vec2_set_y location (+ my (vec2_get_y drag_offset))))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

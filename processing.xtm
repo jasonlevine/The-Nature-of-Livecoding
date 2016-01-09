@@ -1,5 +1,6 @@
 ;;window and renderer setup
 (sys:load "libs/external/glfw3.xtm")
+(sys:load "The-Nature-of-Livecoding/vec2.xtm")
 
 (bind-val window GLFWwindow*
   (begin
@@ -52,9 +53,17 @@
     (fill 0.0 0.0 0.0 0.0)))
 
 ;;stroke
-(bind-func stroke
+(bind-func stroke_RGBAf
 	(lambda (r:float g b a)
-		(_nvgStrokeColor vg (NVGcolor r g b a))))   
+		(_nvgStrokeColor vg (NVGcolor r g b a))))
+
+(bind-func stroke_gray
+  (lambda (gray:i8)
+     (let ((grayf:float  (/ (i8tof gray) 255.)))
+      (_nvgStrokeColor vg (NVGcolor grayf grayf grayf 1.0))))) 
+
+(bind-poly stroke stroke_RGBAf)
+(bind-poly stroke stroke_gray)  
 
 (bind-func no_stroke
   (lambda ()
@@ -66,12 +75,22 @@
 
 
 ;; circle
-(bind-func circle
+(bind-func circle_xy
 	(lambda (x:float y radius)
 		(nvgBeginPath vg)
     (nvgCircle vg x y radius)
     (nvgFill vg)
     (nvgStroke vg)))
+
+(bind-func circle_vec
+  (lambda (pos:vec radius:float)
+    (nvgBeginPath vg)
+    (nvgCircle vg (vec2_get_x pos) (vec2_get_y pos) radius)
+    (nvgFill vg)
+    (nvgStroke vg)))
+
+(bind-poly circle circle_xy)
+(bind-poly circle circle_vec)
 
 ;; rectangle
 (bind-func rectangle
@@ -101,75 +120,14 @@
     (* (random) max)))
 
 
-;; -------VECTOR-------
-;;  functions to work with 2d vectors 
-(sys:load "libs/core/math.xtm")
+;; --------MATH--------
+(bind-func constrain
+  (lambda (val:float min:float max:float)
+    (cond ((< val min) min)
+          ((> val max) max)
+          (else val))))
 
-(bind-alias vec float*)
 
-
-
-(bind-func vec2_get_x
-  (lambda (v1:vec)
-    (pref v1 0)))
-
-(bind-func vec2_set_x
-  (lambda (v1:vec val:float)
-    (pset! v1 0 val)))
-
-(bind-func vec2_get_y
-  (lambda (v1:vec)
-    (pref v1 1)))
-
-(bind-func vec2_set_y
-  (lambda (v1:vec val:float)
-    (pset! v1 1 val)))
-
-(bind-func vec2_set_xy
-  (lambda (v1:vec x:float y:float)
-    (pset! v1 0 x)
-    (pset! v1 1 y)))
-
-(bind-func vec2_set_vec
-  (lambda (v1:vec v2:vec)
-    (pset! v1 0 (pref v2 0))
-    (pset! v1 1 (pref v2 1))))
-
-(bind-poly vec2_set vec2_set_xy)
-(bind-poly vec2_set vec2_set_vec)
-
-;;vector arithmetic
-(bind-func vec2_inc
-  (lambda (v1:vec v2:vec)
-    (vvsumf v1 v2 2 v1)))
-
-(bind-func vec2_dec
-  (lambda (v1:vec v2:vec)
-    (vvsubf v1 v2 2 v1)))
-
-(bind-func vec2_scale
-  (lambda (v1:vec scale:float)
-    (pset! v1 0 (* (pref v1 0) scale))
-    (pset! v1 1 (* (pref v1 1) scale))))
-
-(bind-func vec2_div
-  (lambda (v1:vec scale:float)
-    (pset! v1 0 (/ (pref v1 0) scale))
-    (pset! v1 1 (/ (pref v1 1) scale))))
-
-(bind-func vec2_mag
-  (lambda (v1:vec)
-    (vmagf v1 2)))
-
-(bind-func vec2_normalize
-  (lambda (v1:vec)
-    (vnormalisef v1 2 v1)))
-
-(bind-func vec2_limit
-  (lambda (v1:vec limit:float)
-    (if (> (vec2_mag v1) limit)
-      (begin (vec2_normalize v1)
-            (vec2_scale v1 limit)) 0.)))
 
 ;; Transformations
 (bind-func translate
@@ -201,7 +159,7 @@
 
 ; draw loop
 (bind-func nvg_draw_loop
-	(let ((frame 0))
+	(let ((frame:i64 0))
   (lambda (time:i64 delta_t:double)
     ;(nvg_clear)
     (nvgBeginFrame vg (convert width) (convert height) pixel_ratio)
@@ -214,6 +172,9 @@
     (let ((next_time (+ time (convert (* 44100. delta_t)))))
       (callback next_time nvg_draw_loop next_time delta_t)))))
 
+;(bind-func get_frame:[i64,void]*
+;  (lambda ()
+;    (nvg_draw_loop.frame)))
 ;; another attempt to schemify my draw loop to allow (play) and to avoid pauses in animation when reompiling. Failed.
 ; (define draw
 ;     (lambda ()

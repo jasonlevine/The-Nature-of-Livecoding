@@ -1,0 +1,99 @@
+;; -------VECTOR-------
+;;  functions to work with 2d vectors 
+(sys:load "libs/core/math.xtm")
+
+(bind-alias vec float*)
+
+(bind-func vec2_get_x
+  (lambda (v1:vec)
+    (pref v1 0)))
+
+(bind-func vec2_set_x
+  (lambda (v1:vec val:float)
+    (pset! v1 0 val)))
+
+(bind-func vec2_get_y
+  (lambda (v1:vec)
+    (pref v1 1)))
+
+(bind-func vec2_set_y
+  (lambda (v1:vec val:float)
+    (pset! v1 1 val)))
+
+(bind-func vec2_set_xy
+  (lambda (v1:vec x:float y:float)
+    (pset! v1 0 x)
+    (pset! v1 1 y)))
+
+(bind-func vec2_set_vec
+  (lambda (v1:vec v2:vec)
+    (pset! v1 0 (pref v2 0))
+    (pset! v1 1 (pref v2 1))))
+
+(bind-poly vec2_set vec2_set_xy)
+(bind-poly vec2_set vec2_set_vec)
+
+
+;;vector arithmetic return value
+(bind-func vec2_add
+  (lambda (v1:vec v2:vec)
+    (let ((sum:vec (zalloc 2)))
+      (vvsumf v1 v2 2 sum)
+      sum)))
+
+(bind-func vec2_sub
+  (lambda (v1:vec v2:vec)
+    (let ((difference:vec (zalloc 2)))
+      (vvsubf v1 v2 2 difference)
+      difference)))
+
+;;vector arithmetic mutable
+(bind-func vec2_inc
+  (lambda (v1:vec v2:vec)
+    (vvsumf v1 v2 2 v1)))
+
+(bind-func vec2_dec
+  (lambda (v1:vec v2:vec)
+    (vvsubf v1 v2 2 v1)))
+
+(bind-func vec2_scale
+  (lambda (v1:vec scale:float)
+    (pset! v1 0 (* (pref v1 0) scale))
+    (pset! v1 1 (* (pref v1 1) scale))))
+
+(bind-func vec2_div
+  (lambda (v1:vec scale:float)
+    (pset! v1 0 (/ (pref v1 0) scale))
+    (pset! v1 1 (/ (pref v1 1) scale))))
+
+(bind-func vec2_mag
+  (lambda (v1:vec)
+    (vmagf v1 2)))
+
+(bind-func vec2_normalize
+  (lambda (v1:vec)
+    (vnormalisef v1 2 v1)))
+
+(bind-func vec2_limit
+  (lambda (v1:vec limit:float)
+    (if (> (vec2_mag v1) limit)
+      (begin (vec2_normalize v1)
+            (vec2_scale v1 limit)) 0.)))
+
+;; functions
+(bind-func distance_xy:[float,float,float,float,float]*
+	(lambda (x1 y1 x2 y2)
+		(sqrt (+ 
+			(* (- x2 x1) (- x2 x1))
+			(* (- y2 y1) (- y2 y1))))))
+
+(bind-func distance_vec
+	(lambda (v1:vec v2:vec)
+		(distance_xy (vec2_get_x v1) (vec2_get_y v1) (vec2_get_x v2) (vec2_get_y v2))))
+
+(bind-poly distance distance_xy)
+(bind-poly distance distance_vec)
+
+
+
+
