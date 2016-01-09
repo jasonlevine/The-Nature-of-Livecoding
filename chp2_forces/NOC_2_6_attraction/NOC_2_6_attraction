@@ -2,27 +2,38 @@
 (bind-val height float 200.)
 
 (sys:load "The-Nature-of-Livecoding/processing.xtm")
-(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_1_forces/mover.xtm")
+(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_6_attraction/mover.xtm")
+;(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_6_attraction/attractor.xtm")
 
 ;;setup and initialize vars
-(bind-val mover Mover* (Mover))
-(bind-val attractor Attractor* (Attractor))
+(bind-val mover Mover*)
+;(bind-val attractor Attractor* (Attractor_Contructor))
+
+(bind-func setup
+	(lambda ()
+		(set! mover (Mover))))
+
+(setup)
 
 (bind-func draw
 	(lambda ()
 		(background 255)
 
-		(let ((force:vec (salloc 2)))
-			(vec2_set force (attract attractor mover))
-			(apply_force mover force))
+		;(let ((force:vec (salloc 2)))
+	;		(vec2_set force (attract attractor mover))
+;			(apply_force mover force))
 
 		(update mover)
 
-		(drag attractor (mouse_x) (mouse_y))
-		(hover attractor (mouse_x) (mouse_y))
+;		(drag attractor (mouse_x) (mouse_y))
+;		(hover attractor (mouse_x) (mouse_y))
 
 		(display mover)
-		(display attractor)))
+		;(display attractor)
+		))
 
 
+
+(bind-val col i8 255)
+(xtmX (i8tof 25))
 

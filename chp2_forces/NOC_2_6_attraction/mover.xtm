@@ -3,16 +3,16 @@
 (bind-type Mover <float*,float*,float*,float>)
 
 ;; Constructor for the 2-dimensional case
-(bind-func Mover_2D:[Mover*,void]*
+(bind-func Mover_2D
   (lambda ()
     (let
         ((location (zalloc 2))
          (velocity (zalloc 2))
          (accel (zalloc 2))
          (mass:float 1.))
-      (pfill! location 400. 50.)
-      (pfill! velocity 1. 1.)
-      (pfill! accel 0. 0.)
+      (pfill! location 400.:float 50.:float)
+      (pfill! velocity 1.:float 1.:float)
+      (pfill! accel 0.:float 0.:float)
       (Mover location velocity accel mass))))
 
 ;; Overload the default constructor
@@ -30,7 +30,6 @@
       (vec2_scale (tref m 2) 0.)))
 
 
-
 (bind-func display_mover
   (lambda (m:Mover*)
     (stroke 0. 0. 0. 1.)
@@ -39,10 +38,3 @@
     (circle (vec2_get_x (tref m 0)) (vec2_get_y (tref m 0)) 16.)))
 
 (bind-poly display display_mover)
-
-;; Bounce off bottom of window
-(bind-func check_edges
-  (lambda (m:Mover*)
-    (if (> (vec2_get_y (tref m 0)) height)
-        (vec2_set_y (tref m 1) (* (vec2_get_y (tref m 1)) -1.0)))
-    void))

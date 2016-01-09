@@ -13,7 +13,7 @@
 
 (bind-type Attractor <float,float,vec,i1,i1,vec>)
 
-(bind-func Attractor_Constructor:[Attractor*,void]*
+(bind-func Attractor_Constructor
 	(lambda ()
 		(let ((location:vec (salloc 2))
 					(mass:float 20.)
@@ -95,7 +95,7 @@
 					(rollover:i1 (tref a 4)))
 			(vec2_set location (tref a 2))
 
-			(let ((d:float (dist mx my (vec2_get_x location) (vec2_get_y location))))
+			(let ((d:float (distance mx my (vec2_get_x location) (vec2_get_y location))))
 				
 				(if (< d mass) 
 					(set! rollover 1)
