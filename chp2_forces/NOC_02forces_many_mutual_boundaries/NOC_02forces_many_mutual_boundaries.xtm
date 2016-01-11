@@ -1,0 +1,33 @@
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+(sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_02forces_many_mutual_boundaries/mover.xtm")
+
+;;setup and initialize vars
+(bind-val mover |20,Mover*|*)
+
+(bind-func setup
+	(lambda ()
+		(doloop (i 20)
+			(aset! mover i (Mover (random 0.1 2.0) (random width) (random height))))))
+
+(setup)
+
+(bind-func draw
+	(lambda ()
+		(background 255)
+
+		(doloop (i 20)
+			(doloop (j 20)
+				(if (not (= i j))
+					(let ((force:vec (salloc 2)))
+						(vec2_set force (attract (aref mover j) (aref mover i)))
+						(apply_force (aref mover i) force))))
+
+				(boundaries (aref mover i))
+				(update (aref mover i))
+				(display (aref mover i)))
+		
+		void))
+
