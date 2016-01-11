@@ -16,7 +16,7 @@
 ;; Overload the default constructor
 (bind-poly Mover Mover_2D)
 
-(bind-val g float 0.4)
+(bind-val g float 1.)
 
 (bind-func apply_force
   (lambda (m:Mover* force:vec)
@@ -35,11 +35,12 @@
     (stroke 0. 0. 0. 1.)
     (stroke_width 2.)
     (fill 0.5 0.5 0.5 1.0)
-    (circle (tref m 0) (* (tref m 3) 25.))))
+    (circle (tref m 0) (* (tref m 3) 2.))))
 
 (bind-poly display display_mover)
 
-(bind-func attract
+
+(bind-func repel
   (lambda (m1:Mover* m2:Mover*)
     (let ((force:vec (zalloc 2))
           (m1_location:vec (salloc 2))
@@ -53,11 +54,10 @@
             (m1_mass:float (tref m1 3))
             (m2_mass:float (tref m2 3)))
 
-        (set! d (constrain d 5. 25.))
+        (set! d (constrain d 1. 10000.))
         (vec2_normalize force)
 
         (let ((strength:float (/ (* g m1_mass m1_mass) (* d d))))
-          (vec2_scale force strength)
+          (vec2_scale force (* -1. strength))
           force)))))
-
 
