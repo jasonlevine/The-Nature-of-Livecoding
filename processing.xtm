@@ -126,6 +126,9 @@
   (lambda (max:float)
     (* (random) max)))
 
+(bind-poly random rand_range)
+(bind-poly random rand_max)
+
 
 ;; --------MATH--------
 (bind-func constrain
@@ -176,7 +179,7 @@
 (bind-func nvg_draw_loop
 	(let ((frame:i64 0))
   (lambda (time:i64 delta_t:double)
-    ;(nvg_clear)
+    (nvg_clear)
     (nvgBeginFrame vg (convert width) (convert height) pixel_ratio)
     (nvgResetTransform vg)
     (draw)

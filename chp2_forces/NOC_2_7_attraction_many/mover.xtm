@@ -1,0 +1,38 @@
+
+;; Mover data type: location, velocity, accleration, mass 
+(bind-type Mover <float*,float*,float*,float>)
+
+;; Constructor for the 2-dimensional case
+(bind-func Mover_2D:[Mover*,float,float,float]*
+  (lambda (mass x y)
+    (let ((location (zalloc 2))
+         (velocity (zalloc 2))
+         (accel (zalloc 2)))
+      (pfill! location x y)
+      (pfill! velocity 0.0:float 0.0:float)
+      (pfill! accel 0.0:float 0.0:float)
+      (Mover location velocity accel mass))))
+
+;; Overload the default constructor
+(bind-poly Mover Mover_2D)
+
+(bind-func apply_force
+  (lambda (m:Mover* force:vec)
+      (vec2_div force (tref m 3))
+      (vec2_inc (tref m 2) force)))
+
+(bind-func update
+  (lambda (m:Mover*)
+      (vec2_inc (tref m 1) (tref m 2))
+      (vec2_inc (tref m 0) (tref m 1))
+      (vec2_scale (tref m 2) 0.)))
+
+
+(bind-func display_mover
+  (lambda (m:Mover*)
+    (stroke 0. 0. 0. 1.)
+    (stroke_width 2.)
+    (fill 0.5 0.5 0.5 1.0)
+    (circle (tref m 0) (* (tref m 3) 25.))))
+
+(bind-poly display display_mover)
