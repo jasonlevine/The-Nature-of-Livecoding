@@ -5,8 +5,7 @@
 ;; Constructor for the 2-dimensional case
 (bind-func Mover_2D
   (lambda ()
-    (let
-        ((location (zalloc 2))
+    (let ((location (zalloc 2))
          (velocity (zalloc 2))
          (accel (zalloc 2))
          (mass:float 1.))

@@ -10,15 +10,17 @@
 ;   boolean dragging = false; // Is the object being dragged?
 ;   boolean rollover = false; // Is the mouse over the ellipse?
 ;   PVector dragOffset;  // holds the offset for when object is clicked on
+;
+; Ported to Extempore by Jason Levine
 
 (bind-type Attractor <float,float,vec,i1,i1,vec>)
 
 (bind-func Attractor_Constructor
 	(lambda ()
-		(let ((location:vec (salloc 2))
+		(let ((location:vec (zalloc 2))
 					(mass:float 20.)
 					(G:float 1.)
-					(drag_offset:vec (salloc 2)))
+					(drag_offset:vec (zalloc 2)))
 			(vec2_set location (/ width 2.) (/ height 2.))
 			(vec2_set drag_offset 0. 0.)
 			(Attractor mass G location 0 0 drag_offset))))
@@ -27,7 +29,7 @@
 
 (bind-func attract
 	(lambda (a:Attractor* m:Mover*)
-		(let ((force:vec (salloc 2))
+		(let ((force:vec (zalloc 2))
 					(a_location:vec (salloc 2))
 					(m_location:vec (salloc 2)))
 
@@ -52,7 +54,7 @@
 		(stroke_width 4.)
 		(stroke 0)
 
-		(let ((mass:float (tref a 1))
+		(let ((mass:float (tref a 0))
 					(dragging:i1 (tref a 3))
 					(rollover:i1 (tref a 4))
 					(location:vec (salloc 2)))
@@ -73,7 +75,6 @@
 	(lambda (a:Attractor* mx:float my)
 		(let ((location:vec (salloc 2))
 					(mass:float (tref a 0))
-					(dragging:i1 (tref a 3))
 					(drag_offset:vec (salloc 2)))
 			(vec2_set location (tref a 2))
 			(vec2_set drag_offset (tref a 5))
@@ -82,7 +83,7 @@
 				
 				(if (< d mass) 
 					(begin
-						(set! dragging 1)
+						(tset! a 3 1) ;; set dragged true
 						(vec2_set drag_offset 
 							(- (vec2_get_x location) mx)
 							(- (vec2_get_y location) my))))
@@ -98,23 +99,22 @@
 			(let ((d:float (distance mx my (vec2_get_x location) (vec2_get_y location))))
 				
 				(if (< d mass) 
-					(set! rollover 1)
-					(set! rollover 0))))))
+					(tset! a 4 1) ;;set rollover true
+					(tset! a 4 0)))))) ;;set rollover false
 
 (bind-func stop_dragging
 	(lambda (a:Attractor*)
 		(tset! a 3 0)))
 
+
+
 (bind-func drag
 	(lambda (a:Attractor* mx:float my)
-			(let ((location:vec (salloc 2))
-					(drag_offset:vec (salloc 2)))
-				(vec2_set location (tref a 2))
-				(vec2_set drag_offset (tref a 5))
-
-				(vec2_set_x location (+ mx (vec2_get_x drag_offset)))
-				(vec2_set_y location (+ my (vec2_get_y drag_offset))))))
-
+		(if (tref a 3)
+			(begin
+				(vec2_set_x (tref a 2) (+ mx (vec2_get_x (tref a 5))))
+				(vec2_set_y (tref a 2) (+ my (vec2_get_y (tref a 5))))))
+		void))
 
 
 

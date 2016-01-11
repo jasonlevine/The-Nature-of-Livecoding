@@ -4,6 +4,9 @@
 
 (bind-alias vec float*)
 
+
+
+;; getter and setters
 (bind-func vec2_get_x
   (lambda (v1:vec)
     (pref v1 0)))
@@ -32,6 +35,13 @@
 
 (bind-poly vec2_set vec2_set_xy)
 (bind-poly vec2_set vec2_set_vec)
+
+;;pretty print
+(bind-func print_vec2
+	(lambda (v:vec)
+		(printf "(%d,%d)" (ftod (vec2_get_x v)) (ftod (vec2_get_y v)))))
+
+(bind-poly print print_vec2)
 
 
 ;;vector arithmetic return value
