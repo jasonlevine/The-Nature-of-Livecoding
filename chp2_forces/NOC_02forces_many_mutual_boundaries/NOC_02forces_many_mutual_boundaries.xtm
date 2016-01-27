@@ -10,7 +10,7 @@
 (bind-func setup
 	(lambda ()
 		(doloop (i 20)
-			(aset! mover i (Mover (random 0.1 2.0) (random width) (random height))))))
+			(aset! mover i (Mover (random 1.0 2.0) (random width) (random height))))))
 
 (setup)
 

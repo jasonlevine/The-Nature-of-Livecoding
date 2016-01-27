@@ -79,7 +79,7 @@
           (vec2_set_y force -1.)))
 
       (vec2_normalize force)
-      (vec2_scale force 0.1)
+      (vec2_scale force 0.001)
 
       (apply_force m force)
       void)))

@@ -14,63 +14,144 @@
 
 ;; wrappers for processing like functions and vars
 
-;; background
-(bind-func background_gray
+;; background gray
+(bind-func background
 	(lambda (gray:i32)
     (let ((grayf:float  (/ (i32tof gray) 255.)))
-		  (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))
-    (nvgBeginPath vg)
-    (nvgRect vg 0. 0. width height)
-    (nvgFill vg)))
-
-(bind-func background_RGBf
-  (lambda (r:float g b)
-      (_nvgFillColor vg (NVGcolor r g b 1.0))
+		      (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))
       (nvgBeginPath vg)
       (nvgRect vg 0. 0. width height)
       (nvgFill vg)))
 
-(bind-poly background background_RGBf)
-(bind-poly background background_gray)
+;; background rgb
+(bind-func background
+  (lambda (r:i32 g b)
+    (let ((redf:float  (/ (i32tof r) 255.))
+      (greenf:float  (/ (i32tof g) 255.))
+      (bluef:float  (/ (i32tof b) 255.)))
+      (_nvgFillColor vg (NVGcolor redf greenf bluef 1.0)))
+    (nvgBeginPath vg)
+    (nvgRect vg 0. 0. width height)
+    (nvgFill vg)))
 
-;; fill
-(bind-func fill_RGBAf
-	(lambda (r:float g b a)
-		(_nvgFillColor vg (NVGcolor r g b a))))    
+;; bg rgba
+(bind-func background
+  (lambda (r:i32 g b a)
+    (let ((redf:float  (/ (i32tof r) 255.))
+      (greenf:float  (/ (i32tof g) 255.))
+      (bluef:float  (/ (i32tof b) 255.))
+      (alphaf:float  (/ (i32tof a) 255.)))
+      (_nvgFillColor vg (NVGcolor redf greenf bluef alphaf)))
+    (nvgBeginPath vg)
+    (nvgRect vg 0. 0. width height)
+    (nvgFill vg)))
 
-(bind-func fill_gray
+;; bg gray alpha
+(bind-func background
+  (lambda (gray:i32 alpha)
+    (let ((grayf:float  (/ (i32tof gray) 255.))
+          (alphaf:float  (/ (i32tof alpha) 255.)))
+      (_nvgFillColor vg (NVGcolor grayf grayf grayf alphaf)))
+      (nvgBeginPath vg)
+      (nvgRect vg 0. 0. width height)
+      (nvgFill vg)))
+
+;; bg rgb float
+(bind-func background
+  (lambda (r:float g b)
+    (_nvgFillColor vg (NVGcolor r g b 1.0))
+    (nvgBeginPath vg)
+    (nvgRect vg 0. 0. width height)
+    (nvgFill vg)))
+
+;;bg rgba float
+(bind-func background
+  (lambda (r:float g b a)
+    (_nvgFillColor vg (NVGcolor r g b a))
+    (nvgBeginPath vg)
+    (nvgRect vg 0. 0. width height)
+    (nvgFill vg)))
+
+ 
+;; fill rgb 
+(bind-func fill
+ (lambda (r:i32 g b)
+  (let ((redf:float  (/ (i32tof r) 255.))
+        (greenf:float  (/ (i32tof g) 255.))
+        (bluef:float  (/ (i32tof b) 255.)))
+    (_nvgFillColor vg (NVGcolor redf greenf bluef 1.0)))))
+
+;;fill rgba
+(bind-func fill
+ (lambda (r:i32 g b a)
+  (let ((redf:float  (/ (i32tof r) 255.))
+        (greenf:float  (/ (i32tof g) 255.))
+        (bluef:float  (/ (i32tof b) 255.))
+        (alphaf:float  (/ (i32tof a) 255.)))
+    (_nvgFillColor vg (NVGcolor redf greenf bluef alphaf)))))
+
+
+;; fill gray
+(bind-func fill
   (lambda (gray:i32)
-     (let ((grayf:float  (/ (i32tof gray) 255.)))
-      (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))))
+   (let ((grayf:float  (/ (i32tof gray) 255.)))
+    (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))))
 
-(bind-func fill_grayA
+;; fill gray alpha
+(bind-func fill
   (lambda (gray:i32 alpha:i32)
-     (let ((grayf:float  (/ (i32tof gray) 255.))
+    (let ((grayf:float  (/ (i32tof gray) 255.))
           (alphaf:float (/ (i32tof alpha) 255.)))
       (_nvgFillColor vg (NVGcolor grayf grayf grayf alphaf)))))
-  
 
-(bind-poly fill fill_RGBAf)
-(bind-poly fill fill_gray)
-(bind-poly fill fill_grayA)
+
+;; fill rgba float
+(bind-func fill
+  (lambda (r:float g b a)
+    (_nvgFillColor vg (NVGcolor r g b a))))    
 
 
 (bind-func no_fill
   (lambda ()
     (fill 0.0 0.0 0.0 0.0)))
 
-;;stroke
-(bind-func stroke_RGBAf
-	(lambda (r:float g b a)
-		(_nvgStrokeColor vg (NVGcolor r g b a))))
 
-(bind-func stroke_gray
-  (lambda (gray:i8)
-     (let ((grayf:float  (/ (i8tof gray) 255.)))
-      (_nvgStrokeColor vg (NVGcolor grayf grayf grayf 1.0))))) 
+;; stroke rgb 
+(bind-func stroke
+ (lambda (r:i32 g b)
+  (let ((redf:float  (/ (i32tof r) 255.))
+        (greenf:float  (/ (i32tof g) 255.))
+        (bluef:float  (/ (i32tof b) 255.)))
+    (_nvgStrokeColor vg (NVGcolor redf greenf bluef 1.0)))))
 
-(bind-poly stroke stroke_RGBAf)
-(bind-poly stroke stroke_gray)  
+;;stroke rgba
+(bind-func stroke
+ (lambda (r:i32 g b a)
+  (let ((redf:float  (/ (i32tof r) 255.))
+        (greenf:float  (/ (i32tof g) 255.))
+        (bluef:float  (/ (i32tof b) 255.))
+        (alphaf:float  (/ (i32tof a) 255.)))
+    (_nvgStrokeColor vg (NVGcolor redf greenf bluef alphaf)))))
+
+
+;; stroke gray
+(bind-func stroke
+  (lambda (gray:i32)
+   (let ((grayf:float  (/ (i32tof gray) 255.)))
+    (_nvgStrokeColor vg (NVGcolor grayf grayf grayf 1.0)))))
+
+;; stroke gray alpha
+(bind-func stroke
+  (lambda (gray:i32 alpha:i32)
+    (let ((grayf:float  (/ (i32tof gray) 255.))
+          (alphaf:float (/ (i32tof alpha) 255.)))
+      (_nvgStrokeColor vg (NVGcolor grayf grayf grayf alphaf)))))
+
+
+;; stroke rgba float
+(bind-func stroke
+  (lambda (r:float g b a)
+    (_nvgStrokeColor vg (NVGcolor r g b a))))
 
 (bind-func no_stroke
   (lambda ()
@@ -82,22 +163,19 @@
 
 
 ;; circle
-(bind-func circle_xy
+(bind-func circle
 	(lambda (x:float y radius)
 		(nvgBeginPath vg)
     (nvgCircle vg x y radius)
     (nvgFill vg)
     (nvgStroke vg)))
 
-(bind-func circle_vec
+(bind-func circle
   (lambda (pos:vec radius:float)
     (nvgBeginPath vg)
     (nvgCircle vg (vec2_get_x pos) (vec2_get_y pos) radius)
     (nvgFill vg)
     (nvgStroke vg)))
-
-(bind-poly circle circle_xy)
-(bind-poly circle circle_vec)
 
 ;; rectangle
 (bind-func rectangle
@@ -118,16 +196,13 @@
 
 ;;--------RANDOM-------
 
-(bind-func rand_range
+(bind-func random
   (lambda (min:float max)
     (+ (* (random) (- max min)) min)))
 
-(bind-func rand_max
+(bind-func random
   (lambda (max:float)
     (* (random) max)))
-
-(bind-poly random rand_range)
-(bind-poly random rand_max)
 
 
 ;; --------MATH--------
@@ -168,6 +243,14 @@
   (lambda ()
     (= (glfwGetMouseButton window 0) GLFW_RELEASE)))
 
+;; -------WINDOW--------
+(bind-func resize
+  (lambda (width:i32 height)
+    (glfwSetWindowSize window width height)))
+
+
+
+
 
 ;;  ------DRAW LOOP------
 ;; empty draw func to be reevaluated
@@ -179,7 +262,7 @@
 (bind-func nvg_draw_loop
 	(let ((frame:i64 0))
   (lambda (time:i64 delta_t:double)
-    (nvg_clear)
+    ;(nvg_clear)
     (nvgBeginFrame vg (convert width) (convert height) pixel_ratio)
     (nvgResetTransform vg)
     (draw)
