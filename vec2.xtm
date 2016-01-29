@@ -5,105 +5,98 @@
 (bind-alias vec float*)
 
 
-
 ;; getter and setters
-(bind-func vec2_get_x
+(bind-func getx
   (lambda (v1:vec)
     (pref v1 0)))
 
-(bind-func vec2_set_x
+(bind-func setx
   (lambda (v1:vec val:float)
     (pset! v1 0 val)))
 
-(bind-func vec2_get_y
+(bind-func gety
   (lambda (v1:vec)
     (pref v1 1)))
 
-(bind-func vec2_set_y
+(bind-func sety
   (lambda (v1:vec val:float)
     (pset! v1 1 val)))
 
-(bind-func vec2_set_xy
+(bind-func v2set
   (lambda (v1:vec x:float y:float)
     (pset! v1 0 x)
     (pset! v1 1 y)))
 
-(bind-func vec2_set_vec
+(bind-func v2set
   (lambda (v1:vec v2:vec)
     (pset! v1 0 (pref v2 0))
     (pset! v1 1 (pref v2 1))))
 
-(bind-poly vec2_set vec2_set_xy)
-(bind-poly vec2_set vec2_set_vec)
-
 ;;pretty print
-(bind-func print_vec2
-	(lambda (v:vec)
-		(printf "(%d,%d)" (ftod (vec2_get_x v)) (ftod (vec2_get_y v)))))
-
-(bind-poly print print_vec2)
+;(bind-func print_vec2 ;;doesn't work! prints the same garbage every time
+;	(lambda (v:vec)
+;		(printf "(%d,%d)" (ftod (vec2_get_x v)) (ftod (vec2_get_y v)))))
 
 
 ;;vector arithmetic return value
-(bind-func vec2_add
+(bind-func v2add
   (lambda (v1:vec v2:vec)
     (let ((sum:vec (zalloc 2)))
-      (vvsumf v1 v2 2 sum)
+      (vvsum v1 v2 2 sum)
       sum)))
 
-(bind-func vec2_sub
+(bind-func v2sub
   (lambda (v1:vec v2:vec)
     (let ((difference:vec (zalloc 2)))
-      (vvsubf v1 v2 2 difference)
+      (vvsub v1 v2 2 difference)
       difference)))
 
 ;;vector arithmetic mutable
-(bind-func vec2_inc
+(bind-func v2inc
   (lambda (v1:vec v2:vec)
-    (vvsumf v1 v2 2 v1)))
+    (vvsum v1 v2 2 v1)))
 
-(bind-func vec2_dec
+(bind-func v2dec
   (lambda (v1:vec v2:vec)
-    (vvsubf v1 v2 2 v1)))
+    (vvsub v1 v2 2 v1)))
 
-(bind-func vec2_scale
+(bind-func v2scale
   (lambda (v1:vec scale:float)
     (pset! v1 0 (* (pref v1 0) scale))
     (pset! v1 1 (* (pref v1 1) scale))))
 
-(bind-func vec2_div
+(bind-func v2div
   (lambda (v1:vec scale:float)
     (pset! v1 0 (/ (pref v1 0) scale))
     (pset! v1 1 (/ (pref v1 1) scale))))
 
-(bind-func vec2_mag
+(bind-func magnitude
   (lambda (v1:vec)
-    (vmagf v1 2)))
+    (vmag v1 2)))
 
-(bind-func vec2_normalize
+(bind-func normalize
   (lambda (v1:vec)
-    (vnormalisef v1 2 v1)))
+    (vnormalise v1 2 v1)))
 
-(bind-func vec2_limit
-  (lambda (v1:vec limit:float)
-    (if (> (vec2_mag v1) limit)
-      (begin (vec2_normalize v1)
-            (vec2_scale v1 limit)) 0.)))
+ (bind-func limit_mag:[float,vec,float]*
+   (lambda (v1:vec limit:float)
+     (if (> (magnitude v1) limit)
+       (begin 
+         (normalize v1)
+         (v2scale v1 limit)) 
+       0.)))
 
 ;; functions
-(bind-func distance_xy:[float,float,float,float,float]*
+(bind-func distance:[float,float,float,float,float]*
 	(lambda (x1 y1 x2 y2)
 		(sqrt (+ 
 			(* (- x2 x1) (- x2 x1))
 			(* (- y2 y1) (- y2 y1))))))
 
-(bind-func distance_vec
+(bind-func distance
 	(lambda (v1:vec v2:vec)
-		(distance_xy (vec2_get_x v1) (vec2_get_y v1) (vec2_get_x v2) (vec2_get_y v2))))
-
-(bind-poly distance distance_xy)
-(bind-poly distance distance_vec)
-
-
+    (sqrt (+ 
+      (* (- (getx v2) (getx v1)) (- (getx v2) (getx v1)))
+      (* (- (gety v2) (gety v1)) (- (gety v2) (gety v1)))))))
 
 

@@ -173,7 +173,7 @@
 (bind-func circle
   (lambda (pos:vec radius:float)
     (nvgBeginPath vg)
-    (nvgCircle vg (vec2_get_x pos) (vec2_get_y pos) radius)
+    (nvgCircle vg (getx pos) (gety pos) radius)
     (nvgFill vg)
     (nvgStroke vg)))
 
@@ -195,12 +195,11 @@
     (nvgStroke vg)))
 
 ;;--------RANDOM-------
-
-(bind-func random
+(bind-func rand:[float,float,float]*
   (lambda (min:float max)
     (+ (* (random) (- max min)) min)))
 
-(bind-func random
+(bind-func rand:[float,float]*
   (lambda (max:float)
     (* (random) max)))
 
