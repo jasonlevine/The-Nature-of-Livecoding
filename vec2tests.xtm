@@ -1,0 +1,21 @@
+(bind-val test1 vec2* (vec2 1.0 27.0)) 
+(bind-val test2 vec2* (vec2 3.0 14.0)) 
+
+($ (println (v2add test1 test2)))
+($ (println (v2sub test1 test2)))
+
+($ (println test1))
+($ (println test2))
+
+
+($ (v2set test1 test2))
+
+($ (v2set test1 4.0 6.0))
+
+($ (v2inc test1 test2))
+($ (v2dec test1 test2))
+
+($ (v2scale test1 0.6))
+($ (v2div test1 1.2))
+
+($ (magnitude test2))

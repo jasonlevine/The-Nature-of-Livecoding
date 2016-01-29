@@ -2,7 +2,7 @@
 ;;  functions to work with 2d vectors 
 (sys:load "libs/core/math.xtm")
 
-(bind-type vec2 <float,float>)
+(bind-alias vec float*)
 
 
 ;; getter and setters
