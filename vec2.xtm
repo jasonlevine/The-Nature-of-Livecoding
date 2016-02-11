@@ -4,87 +4,102 @@
 
 (bind-type vec2 <float,float>)
 
+(bind-func print:[void,vec2*]*
+  (lambda (p)
+    (if (null? p)
+        (begin (printout "<>") void)
+        (begin (printout "<"
+                         (tref p 0) ","
+                         (tref p 1) ">")
+               void))))
+
+ 
 
 ;; getter and setters
 (bind-func getx
-  (lambda (v1:vec)
-    (pref v1 0)))
+  (lambda (v1:vec2*)
+    (tref v1 0)))
 
 (bind-func setx
-  (lambda (v1:vec val:float)
-    (pset! v1 0 val)))
+  (lambda (v1:vec2* val:float)
+    (tset! v1 0 val)))
 
 (bind-func gety
-  (lambda (v1:vec)
-    (pref v1 1)))
+  (lambda (v1:vec2*)
+    (tref v1 1)))
 
 (bind-func sety
-  (lambda (v1:vec val:float)
-    (pset! v1 1 val)))
+  (lambda (v1:vec2* val:float)
+    (tset! v1 1 val)))
 
 (bind-func v2set
-  (lambda (v1:vec x:float y:float)
-    (pset! v1 0 x)
-    (pset! v1 1 y)))
+  (lambda (v1:vec2* x:float y:float)
+    (tset! v1 0 x)
+    (tset! v1 1 y)))
 
 (bind-func v2set
-  (lambda (v1:vec v2:vec)
-    (pset! v1 0 (pref v2 0))
-    (pset! v1 1 (pref v2 1))))
+  (lambda (v1:vec2* v2:vec2*)
+    (tset! v1 0 (tref v2 0))
+    (tset! v1 1 (tref v2 1))))
 
-;;pretty print
-;(bind-func print_vec2 ;;doesn't work! prints the same garbage every time
-;	(lambda (v:vec)
-;		(printf "(%d,%d)" (ftod (vec2_get_x v)) (ftod (vec2_get_y v)))))
 
 
 ;;vector arithmetic return value
 (bind-func v2add
-  (lambda (v1:vec v2:vec)
-    (let ((sum:vec (zalloc 2)))
-      (vvsum v1 v2 2 sum)
+  (lambda (v1:vec2* v2:vec2*)
+    (let ((sum:vec2* (vec2 
+          (+ (getx v1) (getx v2)) 
+          (+ (gety v1) (gety v2)))))
       sum)))
 
 (bind-func v2sub
-  (lambda (v1:vec v2:vec)
-    (let ((difference:vec (zalloc 2)))
-      (vvsub v1 v2 2 difference)
-      difference)))
+  (lambda (v1:vec2* v2:vec2*)
+    (let ((diff:vec2* (vec2 
+          (- (getx v1) (getx v2)) 
+          (- (gety v1) (gety v2)))))
+      diff)))
 
 ;;vector arithmetic mutable
 (bind-func v2inc
-  (lambda (v1:vec v2:vec)
-    (vvsum v1 v2 2 v1)))
+  (lambda (v1:vec2* v2:vec2*)
+    (setx v1 (+ (getx v1) (getx v2)))
+    (sety v1 (+ (gety v1) (gety v2)))))
 
 (bind-func v2dec
-  (lambda (v1:vec v2:vec)
-    (vvsub v1 v2 2 v1)))
+  (lambda (v1:vec2* v2:vec2*)
+    (setx v1 (- (getx v1) (getx v2)))
+    (sety v1 (- (gety v1) (gety v2)))))
 
 (bind-func v2scale
-  (lambda (v1:vec scale:float)
-    (pset! v1 0 (* (pref v1 0) scale))
-    (pset! v1 1 (* (pref v1 1) scale))))
+  (lambda (v1:vec2* scale:float)
+    (tset! v1 0 (* (tref v1 0) scale))
+    (tset! v1 1 (* (tref v1 1) scale))))
 
 (bind-func v2div
-  (lambda (v1:vec scale:float)
-    (pset! v1 0 (/ (pref v1 0) scale))
-    (pset! v1 1 (/ (pref v1 1) scale))))
+  (lambda (v1:vec2* scale:float)
+    (tset! v1 0 (/ (tref v1 0) scale))
+    (tset! v1 1 (/ (tref v1 1) scale))))
 
 (bind-func magnitude
-  (lambda (v1:vec)
-    (vmag v1 2)))
+  (lambda (v1:vec2*)
+    (let ((vec:float* (salloc 2)))
+      (pfill! vec (getx v1) (gety v1))
+      (vmag vec 2))))
 
 (bind-func normalize
-  (lambda (v1:vec)
-    (vnormalise v1 2 v1)))
+  (lambda (v1:vec2*)
+    (let ((vec:float* (salloc 2)))
+      (pfill! vec (getx v1) (gety v1))
+      (vnormalise vec 2 vec)
+      (v2set v1 (pref vec 0) (pref vec 1)))))
 
- (bind-func limit_mag:[float,vec,float]*
-   (lambda (v1:vec limit:float)
-     (if (> (magnitude v1) limit)
+ (bind-func limit:[void,vec2*,float]*
+   (lambda (v1:vec2* lim:float)
+     (if (> (magnitude v1) lim)
        (begin 
          (normalize v1)
-         (v2scale v1 limit)) 
-       0.)))
+         (v2scale v1 lim))) 
+       void))
 
 ;; functions
 (bind-func distance:[float,float,float,float,float]*
@@ -94,7 +109,7 @@
 			(* (- y2 y1) (- y2 y1))))))
 
 (bind-func distance
-	(lambda (v1:vec v2:vec)
+	(lambda (v1:vec2* v2:vec2*)
     (sqrt (+ 
       (* (- (getx v2) (getx v1)) (- (getx v2) (getx v1)))
       (* (- (gety v2) (gety v1)) (- (gety v2) (gety v1)))))))

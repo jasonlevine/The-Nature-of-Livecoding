@@ -7,7 +7,6 @@
 ($ (println test1))
 ($ (println test2))
 
-
 ($ (v2set test1 test2))
 
 ($ (v2set test1 4.0 6.0))
@@ -19,3 +18,10 @@
 ($ (v2div test1 1.2))
 
 ($ (magnitude test2))
+
+($ (normalize test1))
+
+($ (limit test2 10.))
+
+($ (distance test1 test2))
+($ (distance (getx test1) (gety test1) (getx test2) (gety test2)))

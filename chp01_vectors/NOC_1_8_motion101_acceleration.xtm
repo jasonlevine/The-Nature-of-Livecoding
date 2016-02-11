@@ -7,6 +7,77 @@
 
 (sys:load "The-Nature-of-Livecoding/processing.xtm")
 
+
+;;make mover type loc vel accel topspeed
+(bind-type Mover <vec2*,vec2*,vec2*,float>)
+
+;; constructor  not working cuz mover in a mover
+; (bind-func Mover
+; 	(lambda ()
+; 		(let ((location:vec2* (vec2 (rand width) (rand height)))
+; 					(velocity:vec2* (vec2 (rand -2. 2.) (rand -2. 2.))))
+; 			(Mover location velocity))))
+
+;;update - location += velocity
+(bind-func update
+	(lambda (m:Mover*)
+		(v2inc (tref m 0) (tref m 1))
+		void))
+
+;;check bounds. wrap around
+(bind-func check_edges
+	(lambda (m:Mover*)
+		(let ((location:vec2* (tref m 0))
+					(velocity:vec2* (tref m 1)))
+
+			(if (> (getx location) width) 
+				(setx location 0.))
+
+			(if (< (getx location) 0.) 
+				(setx location width))
+
+			(if (> (gety location) height) 
+				(sety location 0.))
+
+			(if (< (gety location) 0.) 
+				(sety location height)))
+		void))
+
+;;display mover		
+(bind-func display				
+	(lambda (m:Mover*)
+		(stroke 0)
+		(stroke_width 2.0)
+		(fill 127)
+		(circle (tref m 0) 48.0)
+		void))
+
+
+;; setup variables
+(bind-val mover Mover*)
+
+
+;;this func gives #<CPTR: 0x11917d140> error but appears to work
+(bind-func setup
+	(lambda ()
+		(let ((location:vec2* (vec2 (rand width) (rand height)))
+					(velocity:vec2* (vec2 (rand -2. 2.) (rand -2. 2.))))
+			(tset! mover 0 location)
+			(tset! mover 1 velocity))))
+
+(setup)
+
+
+;; draw loop
+(bind-func draw
+    (lambda ()
+    	(background 1.0 1.0 1.0)
+
+    	(mover)
+    	))
+
+
+
 ;; make mover closure
 (bind-func make-mover
 	(lambda ()
@@ -42,17 +113,3 @@
 			(stroke_width 2.0)
 			(fill 0.5 0.5 0.5 1.0)
 			(circle (vec2_get_x location) (vec2_get_y location) 48.0))))))
-
-
-
-;; setup variables
-(bind-func mover (make-mover))
-
-
-;; draw loop
-(bind-func draw
-    (lambda ()
-    	(background 1.0 1.0 1.0)
-
-    	(mover)
-    	))

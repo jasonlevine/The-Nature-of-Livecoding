@@ -1,37 +1,29 @@
 ;; setup window dims
-
 (bind-val width float 200.)
 (bind-val height float 200.)
 
 (sys:load "The-Nature-of-Livecoding/processing.xtm")
 
 ;; setup variables
-
-(bind-val location vec 2)
-(bind-val velocity vec 2)
-
-(call-as-xtlang (vec2_set location 100. 100.))
-(call-as-xtlang (vec2_set velocity 2. 2.5))
-
+(bind-val location vec2* (vec2 100. 100.))
+(bind-val velocity vec2* (vec2 2. 2.5))
 
 (bind-func draw
     (lambda ()
-      ;; draw background
- 			(fill 1.0 1.0 1.0 0.03)
-      (stroke 1.0 1.0 1.0 0.0)
-      (rect 0. 0. width height)
+      ;; draw background w/ alpha for fading
+      (background 255 10)
 
   		;; update the ball position
-      (vec2_inc location velocity)
+      (v2inc location velocity)
 
-  		(if (or (> (vec2_get_x location) width) (< (vec2_get_x location) 0.0))
-  			(vec2_set_x velocity (* (vec2_get_x velocity) -1.0)))
+  		(if (or (> (getx location) width) (< (getx location) 0.0))
+  			(setx velocity (* (getx velocity) -1.0)))
 
-  		(if (or (> (vec2_get_y location) height) (< (vec2_get_y location) 0.0))
-        (vec2_set_y velocity (* (vec2_get_y velocity) -1.0)))
+  		(if (or (> (gety location) height) (< (gety location) 0.0))
+        (sety velocity (* (gety velocity) -1.0)))
 
       ;; draw the ball
-      (fill 0.68 0.68 0.68 1.0)
-      (stroke 0.0 0.0 0.0 1.0)
+      (fill 150)
+      (stroke 0)
       (stroke_width 2.0)
-      (circle (vec2_get_x location) (vec2_get_y location) 48.0)))
+      (circle location 48.0)))

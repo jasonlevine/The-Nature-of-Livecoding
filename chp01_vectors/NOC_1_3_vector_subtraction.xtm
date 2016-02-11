@@ -13,27 +13,20 @@
 (sys:load "The-Nature-of-Livecoding/processing.xtm")
 
 ;; setup variables
-(bind-val mouse_pos vec 2)
-(bind-val center vec 2)
+(bind-val mouse_pos vec2*)
+(bind-val center vec2* (vec2 (/ width 2.) (/ height 2.)))
 
-(call-as-xtlang (vec2_set center (/ width 2.) (/ height 2.)))
-
-
-
-(bind-func draw
-    (lambda ()
-    	(circle mouse_x mouse_y 25.)))
 
 ;; draw loop
 (bind-func draw
     (lambda ()
     	(background 1.0 1.0 1.0)
 
-    	(vec2_set mouse_pos (mouse_x) (mouse_y))
-    	(vec2_dec mouse_pos center)
+    	(v2set mouse_pos (mouse_x) (mouse_y))
+    	(v2dec mouse_pos center)
 
     	(translate (/ width 2.) (/ height 2.))
     	(stroke_width 2.)
-    	(stroke 0. 0. 0. 1.)
-    	(line 0. 0. (vec2_get_x mouse_pos) (vec2_get_y mouse_pos))))
+    	(stroke 0)
+    	(line 0. 0. (getx mouse_pos) (gety mouse_pos))))
 

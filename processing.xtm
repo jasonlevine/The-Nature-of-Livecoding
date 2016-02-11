@@ -171,7 +171,7 @@
     (nvgStroke vg)))
 
 (bind-func circle
-  (lambda (pos:vec radius:float)
+  (lambda (pos:vec2* radius:float)
     (nvgBeginPath vg)
     (nvgCircle vg (getx pos) (gety pos) radius)
     (nvgFill vg)

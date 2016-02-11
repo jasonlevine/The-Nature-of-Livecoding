@@ -7,43 +7,88 @@
 
 (sys:load "The-Nature-of-Livecoding/processing.xtm")
 
-;; make mover closure
-(bind-func make-mover
-	(lambda ()
-		(let ((location:vec (zalloc 2))
-					(velocity:vec (zalloc 2)))
-					(vec2_set location (rand_max width) (rand_max height))
-					(vec2_set velocity (rand_range -2. 2.) (rand_range -2. 2.))
-		(lambda ()
-			;;update position
-			(vec2_inc location velocity)
+;;make mover type
+(bind-type Mover <vec2*,vec2*>)
 
-			;;check bounds. wrap around
-			(if (> (vec2_get_x location) width) 
-				(vec2_set_x location 0.))
+;; constructor  not working cuz mover in a mover
+ (bind-func Mover
+ 	(lambda ()
+ 		(let ((location:vec2* (vec2 (rand width) (rand height)))
+ 					(velocity:vec2* (vec2 (rand -2. 2.) (rand -2. 2.))))
+ 			(Mover:[Mover*,vec2*,vec2*] location velocity))))
 
-			(if (< (vec2_get_x location) 0.) 
-				(vec2_set_x location width))
+;;update - location += velocity
+(bind-func update
+	(lambda (m:Mover*)
+		(v2inc (tref m 0) (tref m 1))
+		void))
 
-			(if (> (vec2_get_y location) height) 
-				(vec2_set_y location 0.))
+;;check bounds. wrap around
+(bind-func check_edges
+	(lambda (m:Mover*)
+		(let ((location:vec2* (tref m 0))
+					(velocity:vec2* (tref m 1)))
 
-			(if (< (vec2_get_y location) 0.) 
-				(vec2_set_y location height))
+			(if (> (getx location) width) 
+				(setx location 0.))
 
-			;;display mover
-			(stroke 0.0 0.0 0.0 1.0)
-			(stroke_width 2.0)
-			(fill 0.5 0.5 0.5 1.0)
-			(circle (vec2_get_x location) (vec2_get_y location) 48.0))))))
+			(if (< (getx location) 0.) 
+				(setx location width))
+
+			(if (> (gety location) height) 
+				(sety location 0.))
+
+			(if (< (gety location) 0.) 
+				(sety location height)))
+		void))
+
+;;display mover		
+(bind-func display				
+	(lambda (m:Mover*)
+		(stroke 0)
+		(stroke_width 2.0)
+		(fill 127)
+		(circle (tref m 0) 48.0)
+		void))
+
 
 ;; setup variables
-(bind-func mover (make-mover))
+(bind-val mover Mover* (Mover))
 
 ;; draw loop
 (bind-func draw
-    (lambda ()
-    	(background 1.0 1.0 1.0)
+  (lambda ()
+  	(background 255)
 
-    	(mover)
-    	))
+  	(update mover)
+  	(check_edges mover)
+  	(display mover)))
+
+
+; ;; make mover closure
+; (bind-func make-mover
+; 	(lambda ()
+; 		(let ((location:vec (zalloc 2))
+; 					(velocity:vec (zalloc 2)))
+; 					(vec2_set location (rand_max width) (rand_max height))
+; 					(vec2_set velocity (rand_range -2. 2.) (rand_range -2. 2.))
+; 		(lambda ()
+
+; 			;;check bounds. wrap around
+; 			(if (> (vec2_get_x location) width) 
+; 				(vec2_set_x location 0.))
+
+; 			(if (< (vec2_get_x location) 0.) 
+; 				(vec2_set_x location width))
+
+; 			(if (> (vec2_get_y location) height) 
+; 				(vec2_set_y location 0.))
+
+; 			(if (< (vec2_get_y location) 0.) 
+; 				(vec2_set_y location height))
+
+; 			;;display mover
+; 			(stroke 0.0 0.0 0.0 1.0)
+; 			(stroke_width 2.0)
+; 			(fill 0.5 0.5 0.5 1.0)
+; 			(circle (vec2_get_x location) (vec2_get_y location) 48.0))))))
