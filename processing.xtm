@@ -111,7 +111,7 @@
     (_nvgFillColor vg (NVGcolor r g b a))))    
 
 
-(bind-func no_fill
+(bind-func nofill
   (lambda ()
     (fill 0.0 0.0 0.0 0.0)))
 
@@ -153,7 +153,7 @@
   (lambda (r:float g b a)
     (_nvgStrokeColor vg (NVGcolor r g b a))))
 
-(bind-func no_stroke
+(bind-func nostroke
   (lambda ()
     (stroke 0.0 0.0 0.0 0.0)))
 

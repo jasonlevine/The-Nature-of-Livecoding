@@ -14,57 +14,79 @@
 
 (sys:load "The-Nature-of-Livecoding/processing.xtm")
 
-;; make mover closure
-(bind-func make-mover
-	(lambda ()
-		(let ((location:vec (zalloc 2))
-					(velocity:vec (zalloc 2))
-					(acceleration:vec (zalloc 2))
-					(top_speed:float 5.))
+;;make mover type loc vel accel topspeed
+(bind-type Mover <vec2*,vec2*,vec2*,float>)
 
-					(vec2_set location (* width 0.5) (* height 0.5))
-					(vec2_set velocity 0. 0.)
-					
-		(lambda ()
-			;;update position and velocity
+;;constructor
+ (bind-func Mover
+ 	(lambda ()
+		(let ((location:vec2* (vec2 (rand (* width 0.5)) (rand (* height 0.5))))
+					(velocity:vec2* (vec2 0. 0.))
+					(acceleration:vec2* (vec2 0. 0.))
+					(topspeed:float 6.))
+			(Mover:[Mover*,vec2*,vec2*,vec2*,float] 
+				location 
+				velocity 
+				acceleration 
+				topspeed))))
+
+
+;;update 
+(bind-func update
+	(lambda (m:Mover*)
+		(let ((location:vec2* (tref m 0))
+					(velocity:vec2* (tref m 1))
+					(acceleration:vec2* (tref m 2))
+					(topspeed:float (tref m 3)))
 
 			;;get acceleration from mouse pos
-			(let ((mouse_pos:vec (zalloc 2)))
-				(vec2_set mouse_pos (mouse_x) (mouse_y))
-				(vec2_dec mouse_pos location)
-				(vec2_normalize mouse_pos)
-				(vec2_scale mouse_pos 0.2)
-				(vec2_set acceleration (vec2_get_x mouse_pos) (vec2_get_y mouse_pos)))
+			(let ((mouse_pos:vec2* (vec2 (mouse_x) (mouse_y))))
+				(v2dec mouse_pos location)
+				(normalize mouse_pos)
+				(v2scale mouse_pos 0.2)
+				(v2set acceleration (getx mouse_pos) (gety mouse_pos)))
 
-			(vec2_inc velocity acceleration)
-			(vec2_limit velocity top_speed)
-			(vec2_inc location velocity)
+			(v2inc velocity acceleration) ;; add accel to vel
+			(limit velocity topspeed) ;; limit vel by topspeed
+			(v2inc location velocity) ;; add vel to location
+			void)))
 
-			;;check bounds. wrap around
-			(if (> (vec2_get_x location) width) 
-				(vec2_set_x location 0.))
+;;check bounds. wrap around
+(bind-func check_edges
+	(lambda (m:Mover*)
+		(let ((location:vec2* (tref m 0))
+					(velocity:vec2* (tref m 1)))
 
-			(if (< (vec2_get_x location) 0.) 
-				(vec2_set_x location width))
+			(if (> (getx location) width) 
+				(setx location 0.))
 
-			(if (> (vec2_get_y location) height) 
-				(vec2_set_y location 0.))
+			(if (< (getx location) 0.) 
+				(setx location width))
 
-			(if (< (vec2_get_y location) 0.) 
-				(vec2_set_y location height))
+			(if (> (gety location) height) 
+				(sety location 0.))
 
-			;;display mover
-			(stroke 0.0 0.0 0.0 1.0)
-			(stroke_width 2.0)
-			(fill 0.5 0.5 0.5 1.0)
-			(circle (vec2_get_x location) (vec2_get_y location) 48.0)))))
+			(if (< (gety location) 0.) 
+				(sety location height)))
+		void))
+
+;;display mover		
+(bind-func display				
+	(lambda (m:Mover*)
+		(stroke 0)
+		(stroke_width 2.0)
+		(fill 127)
+		(circle (tref m 0) 48.0)
+		void))
 
 
 ;; setup variables
-(bind-func mover (make-mover))
+(bind-val mover Mover* (Mover))
 
 ;; draw loop
 (bind-func draw
-    (lambda ()
-    	(background 1.0 1.0 1.0)
-    	(mover)))
+  (lambda ()
+  	(background 255)
+  	(update mover)
+  	(check_edges mover)
+  	(display mover)))

@@ -5,30 +5,20 @@
 (sys:load "The-Nature-of-Livecoding/chp2_forces/NOC_2_1_forces/mover.xtm")
 
 ;;setup and initialize vars
-(bind-val mover Mover* (Mover 30. 30. 0. 0. 0. 0. 1.))
+(bind-val mover Mover* 
+	(Mover (vec2 30. 30.) (vec2 0. 0.) (vec2 0. 0.) 1.))
 
 (bind-func draw
 	(lambda ()
-		(background 1.0 1.0 1.0)
-		(let ((t1 0.0) (t2 0.0) (t3 0.0) (t4 0.0) (t5 0.0))
-			(set! t1 (clock_clock))
-			(let ((wind:vec (salloc 2))
-						(gravity:vec (salloc 2)))
-				(vec2_set wind 0.01 0.0)
-				(vec2_set gravity 0.0 0.1)
-
+		(background 255)
+			(let ((wind:vec2* (vec2 0.01 0.0))
+						(gravity:vec2* (vec2 0.0 0.1)))
 				(apply_force mover wind)
 				(apply_force mover gravity))
 
-			(set! t2 (clock_clock))
 			(update mover)
-			(set! t3 (clock_clock))
 			(display mover)
-			(set! t4 (clock_clock))
-			(check_edges mover)
-			(set! t5 (clock_clock))
-			(println "apply force:" (- t2 t1) " update:" (- t3 t2) " display:" (- t4 t3) " check edges:" (- t5 t4))
-			)))
+			(check_edges mover))))
 
 
 
