@@ -11,17 +11,26 @@
 ;;make mover type loc vel accel topspeed
 (bind-type Mover <vec2*,vec2*,vec2*,float>)
 
-;; constructor  not working cuz mover in a mover
-; (bind-func Mover
-; 	(lambda ()
-; 		(let ((location:vec2* (vec2 (rand width) (rand height)))
-; 					(velocity:vec2* (vec2 (rand -2. 2.) (rand -2. 2.))))
-; 			(Mover location velocity))))
+;;constructor
+ (bind-func Mover
+ 	(lambda ()
+		(let ((location:vec2* (vec2 (rand width) (rand height)))
+					(velocity:vec2* (vec2 (rand -2. 2.) (rand -2. 2.)))
+					(acceleration:vec2* (vec2 -0.001 0.01))
+					(topspeed:float 10.))
+			(Mover:[Mover*,vec2*,vec2*,vec2*,float] 
+				location 
+				velocity 
+				acceleration 
+				topspeed))))
 
-;;update - location += velocity
+
+;;update 
 (bind-func update
 	(lambda (m:Mover*)
-		(v2inc (tref m 0) (tref m 1))
+		(v2inc (tref m 1) (tref m 2)) ;; add accel to vel
+		(limit (tref m 1) (tref m 3)) ;; limit vel by topspeed
+		(v2inc (tref m 0) (tref m 1)) ;; add vel to location
 		void))
 
 ;;check bounds. wrap around
@@ -54,62 +63,12 @@
 
 
 ;; setup variables
-(bind-val mover Mover*)
-
-
-;;this func gives #<CPTR: 0x11917d140> error but appears to work
-(bind-func setup
-	(lambda ()
-		(let ((location:vec2* (vec2 (rand width) (rand height)))
-					(velocity:vec2* (vec2 (rand -2. 2.) (rand -2. 2.))))
-			(tset! mover 0 location)
-			(tset! mover 1 velocity))))
-
-(setup)
-
+(bind-val mover Mover* (Mover))
 
 ;; draw loop
 (bind-func draw
-    (lambda ()
-    	(background 1.0 1.0 1.0)
-
-    	(mover)
-    	))
-
-
-
-;; make mover closure
-(bind-func make-mover
-	(lambda ()
-		(let ((location:vec (zalloc 2))
-					(velocity:vec (zalloc 2))
-					(acceleration:vec (zalloc 2))
-					(top_speed:float 10.))
-
-					(vec2_set location (rand_max width) (rand_max height))
-					(vec2_set velocity (rand_range -2. 2.) (rand_range -2. 2.))
-					(vec2_set acceleration -0.001 0.01)
-		(lambda ()
-			;;update position and velocity
-			(vec2_inc velocity acceleration)
-			(vec2_limit velocity top_speed)
-			(vec2_inc location velocity)
-
-			;;check bounds. wrap around
-			(if (> (vec2_get_x location) width) 
-				(vec2_set_x location 0.))
-
-			(if (< (vec2_get_x location) 0.) 
-				(vec2_set_x location width))
-
-			(if (> (vec2_get_y location) height) 
-				(vec2_set_y location 0.))
-
-			(if (< (vec2_get_y location) 0.) 
-				(vec2_set_y location height))
-
-			;;display mover
-			(stroke 0.0 0.0 0.0 1.0)
-			(stroke_width 2.0)
-			(fill 0.5 0.5 0.5 1.0)
-			(circle (vec2_get_x location) (vec2_get_y location) 48.0))))))
+  (lambda ()
+  	(background 255)
+  	(update mover)
+  	(check_edges mover)
+  	(display mover)))

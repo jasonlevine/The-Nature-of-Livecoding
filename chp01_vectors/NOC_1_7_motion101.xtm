@@ -10,7 +10,7 @@
 ;;make mover type
 (bind-type Mover <vec2*,vec2*>)
 
-;; constructor  not working cuz mover in a mover
+;; constructor 
  (bind-func Mover
  	(lambda ()
  		(let ((location:vec2* (vec2 (rand width) (rand height)))
