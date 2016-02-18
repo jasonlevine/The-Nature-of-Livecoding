@@ -17,11 +17,12 @@
 
 (bind-func Attractor
 	(lambda ()
-		(let ((location:vec2* (vec2* (/ width 2.) (/ height 2.)))
+		(let ((location:vec2* (vec2 (/ width 2.) (/ height 2.)))
 					(mass:float 20.)
 					(G:float 1.)
-					(drag_offset:vec2* (vec2* 0. 0.)))
-			(Attractor mass G location 0 0 drag_offset))))
+					(drag_offset:vec2* (vec2 0. 0.)))
+			(Attractor:[Attractor*,float,float,vec2*,i1,i1,vec2*]*
+			  mass G location 0 0 drag_offset))))
 
 (bind-func attract
 	(lambda (a:Attractor* m:Mover*)

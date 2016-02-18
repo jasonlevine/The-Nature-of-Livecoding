@@ -12,7 +12,7 @@
 (bind-func setup
 	(lambda ()
 		(doloop (i 10)
-			(aset! mover i (Mover (random 0.1 2.0) (random width) (random height))))
+			(aset! mover i (Mover (rand 0.1 2.0) (rand width) (rand height))))
 		(set! attractor (Attractor))))
 
 (setup)
@@ -32,8 +32,7 @@
 			(stop_dragging attractor))
 
 		(doloop (i 10)
-			(let ((force:vec (salloc 2)))
-				(vec2_set force (attract attractor (aref mover i)))
+			(let ((force:vec2* (attract attractor (aref mover i))))
 				(apply_force (aref mover i) force))
 
 			(update (aref mover i))
