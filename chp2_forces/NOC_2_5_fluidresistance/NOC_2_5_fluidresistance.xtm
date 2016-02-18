@@ -12,7 +12,7 @@
 (bind-func setup
 	(lambda ()
 		(doloop (i 11:i64)
-			(aset! movers i (Mover (rand_range 1.0 4.0) (rand_max width) 0.)))
+			(aset! movers i (Mover (rand 1.0 4.0) (rand width) 0.)))
 
 		(set! liquid (Liquid 0. (/ height 2.) width (/ height 2.) 0.1))
 		void))
@@ -22,24 +22,21 @@
 
 (bind-func draw
 	(lambda ()
-		(background 1.0 1.0 1.0)
+		(background 255)
 
 		;; Draw water
 		(display liquid)
 
 		(doloop (i 11)
-
 			;; Is the Mover in the liquid?
 			(if (contains liquid (aref movers i))
 				;; Calculate drag force
-				(let ((drag_force:vec (salloc 2)))
-					(vec2_set drag_force (drag liquid (aref movers i)))
+				(let ((drag_force:vec2* (drag liquid (aref movers i))))
 					;;Apply drag force to Mover
 					(apply_force (aref movers i) drag_force)))
 
 			;; Gravity is scaled by mass here!
-			(let ((gravity:vec (salloc 2)))
-				(vec2_set gravity 0.0 (* 0.1 (tref (aref movers i) 3)))
+			(let ((gravity:vec2* (vec2 0.0 (* 0.1 (tref (aref movers i) 3)))))
 				(apply_force (aref movers i) gravity))
 
 			(update (aref movers i))

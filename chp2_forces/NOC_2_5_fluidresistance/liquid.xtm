@@ -17,8 +17,8 @@
 ;; Is the Mover in the Liquid?
 (bind-func contains
 	(lambda (l:Liquid* m:Mover*)
-		(let ((loc_x:float (pref (tref m 0) 0))
-					(loc_y:float (pref (tref m 0) 1))
+		(let ((loc_x:float (getx (tref m 0)))
+					(loc_y:float (gety (tref m 0)))
 					(liq_x:float (tref l 0))
 					(liq_y:float (tref l 1))
 					(liq_w:float (tref l 2))
@@ -32,29 +32,27 @@
 ;; Calculate drag force
 (bind-func drag
 	(lambda (l:Liquid* m:Mover*)
-		(let ((velocity:vec (salloc 2)))
-			(vec2_set velocity (tref m 1))
+		(let ((velocity:vec2* (salloc)))
+			(v2set velocity (tref m 1))
 
 			;; Magnitude is coefficient * speed squared
 			(let* ((coefficient:float (tref l 4))
-						(speed:float (vec2_mag velocity))
+						(speed:float (magnitude velocity))
 						(drag_magnitude:float (* coefficient speed speed))
-						(drag_force:vec (zalloc 2)))
+						(drag_force:vec2* (zalloc)))
 
 				;; Direction is inverse of velocity
-				(vec2_set drag_force velocity)
-				(vec2_scale drag_force -1.)
+				(v2set drag_force velocity)
+				(v2scale drag_force -1.)
 
 				;; Scale according to magnitude
-				(vec2_normalize drag_force)
-				(vec2_scale drag_force drag_magnitude)
+				(normalize drag_force)
+				(v2scale drag_force drag_magnitude)
 				drag_force))))
 
 
-(bind-func display_liquid
+(bind-func display
 	(lambda (l:Liquid*)
-		(no_stroke)
+		(nostroke)
 		(fill 50)
 		(rectangle (tref l 0) (tref l 1) (tref l 2) (tref l 3))))
-
-(bind-poly display display_liquid)

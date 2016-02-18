@@ -5,7 +5,11 @@
 ;; Constructor for the 2-dimensional case
 (bind-func Mover:[Mover*,float,float,float]*
   (lambda (mass x y)
-    (Mover (vec2 x y) (vec2 0. 0.) (vec2 0. 0.) mass))))
+    (Mover:[Mover*,vec2*,vec2*,vec2*,float] 
+      (vec2 x y) 
+      (vec2 0. 0.) 
+      (vec2 0. 0.) 
+      mass)))
 
 
 ;; Now create an instance with particular initial values

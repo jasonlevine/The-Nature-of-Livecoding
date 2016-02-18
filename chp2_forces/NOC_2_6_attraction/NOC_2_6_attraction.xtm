@@ -20,8 +20,7 @@
 	(lambda ()
 		(background 255)
 
-		(let ((force:vec (salloc 2)))
-			(vec2_set force (attract attractor mover))
+		(let ((force:vec2* (attract attractor mover)))
 			(apply_force mover force))
 
 		(update mover)

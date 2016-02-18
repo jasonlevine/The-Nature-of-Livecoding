@@ -1,39 +1,31 @@
 
 ;; Mover data type: location, velocity, accleration, mass 
-(bind-type Mover <float*,float*,float*,float>)
+(bind-type Mover <vec2*,vec2*,vec2*,float>)
 
-;; Constructor for the 2-dimensional case
-(bind-func Mover_2D
+;; Constructor
+(bind-func Mover:[Mover*]*
   (lambda ()
-    (let ((location (zalloc 2))
-         (velocity (zalloc 2))
-         (accel (zalloc 2))
-         (mass:float 1.))
-      (pfill! location 400.:float 50.:float)
-      (pfill! velocity 1.:float 1.:float)
-      (pfill! accel 0.:float 0.:float)
-      (Mover location velocity accel mass))))
+    (Mover:[Mover*,vec2*,vec2*,vec2*,float] 
+      (vec2 400. 50.) 
+      (vec2 1. 1.) 
+      (vec2 0. 0.) 
+      1.)))
 
-;; Overload the default constructor
-(bind-poly Mover Mover_2D)
-
+;; Now create an instance with particular initial values
 (bind-func apply_force
-  (lambda (m:Mover* force:vec)
-      (vec2_div force (tref m 3))
-      (vec2_inc (tref m 2) force)))
+  (lambda (m:Mover* force:vec2*)
+      (v2div force (tref m 3))
+      (v2inc (tref m 2) force)))
 
 (bind-func update
   (lambda (m:Mover*)
-      (vec2_inc (tref m 1) (tref m 2))
-      (vec2_inc (tref m 0) (tref m 1))
-      (vec2_scale (tref m 2) 0.)))
+      (v2inc (tref m 1) (tref m 2))
+      (v2inc (tref m 0) (tref m 1))
+      (v2scale (tref m 2) 0.)))
 
-
-(bind-func display_mover
+(bind-func display
   (lambda (m:Mover*)
-    (stroke 0. 0. 0. 1.)
+    (stroke 0)
     (stroke_width 2.)
-    (fill 0.5 0.5 0.5 1.0)
-    (circle (vec2_get_x (tref m 0)) (vec2_get_y (tref m 0)) 16.)))
-
-(bind-poly display display_mover)
+    (fill 127)
+    (circle (tref m 0) 16.)))

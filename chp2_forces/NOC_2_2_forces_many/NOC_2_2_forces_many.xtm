@@ -10,18 +10,16 @@
 (bind-func setup
 	(lambda ()
 		(doloop (i 20:i64)
-			(aset! movers i (Mover (rand_range 0.1 4.0) 0. 0.)))))
+			(aset! movers i (Mover (rand 0.1 4.0) 0. 0.)))))
 
 (setup)
 
-
 (bind-func draw
 	(lambda ()
-		(background 1.0 1.0 1.0)
-		(let ((wind:vec (salloc 2))
-					(gravity:vec (salloc 2)))
-			(vec2_set wind 0.01 0.0)
-			(vec2_set gravity 0.0 0.1)
+		(background 255)
+
+		(let ((wind:vec2* (vec2 0.01 0.0))
+					(gravity:vec2* (vec2 0.0 0.1)))
 
 			(doloop (i 20)
 				(apply_force (aref movers i) wind)

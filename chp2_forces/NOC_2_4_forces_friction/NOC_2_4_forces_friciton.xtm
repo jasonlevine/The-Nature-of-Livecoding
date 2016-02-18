@@ -10,47 +10,33 @@
 (bind-func setup
 	(lambda ()
 		(doloop (i 5:i64)
-			(aset! movers i (Mover (rand_range 1.0 4.0) (rand_max width) 0.)))))
+			(aset! movers i (Mover (rand 1.0 4.0) (rand width) 0.)))))
 
 (setup)
 
 
+
 (bind-func draw
 	(lambda ()
-		(background 1.0 1.0 1.0)
+		(background 255)
 
-		(doloop (i 5)
-			(let ((wind:vec (salloc 2))
-						(gravity:vec (salloc 2))
-						(c:float 0.05)
-						(friction:vec (salloc 2)))
+			(doloop (i 5)
+				(let ((wind:vec2* (vec2 0.01 0.0))
+							(gravity:vec2* (vec2 0.0 (* 0.1 (tref (aref movers i) 3))))
+							(c:float 0.05)
+							(friction:vec2* (salloc)))
 
-				(vec2_set wind 0.01 0.0)
-				(vec2_set gravity 0.0 (* 0.1 (tref (aref movers i) 3)))
+					(v2set friction (tref (aref movers i) 1))
+					(v2scale friction -1.0)
+					(normalize friction)
+					(v2scale friction c)
 
-				(vec2_set friction (tref (aref movers i) 1))
-				(vec2_scale friction -1.0)
-				(vec2_normalize friction)
-				(vec2_scale friction c)
+					(if (> (magnitude (tref (aref movers i) 1)) 0.)
+						(apply_force (aref movers i) friction))
 
-				(if (> (vec2_mag (tref (aref movers i) 1)) 0.)
-					(apply_force (aref movers i) friction))
+					(apply_force (aref movers i) wind)
+					(apply_force (aref movers i) gravity)
 
-				(apply_force (aref movers i) wind)
-				(apply_force (aref movers i) gravity)
-
-				(update (aref movers i))
-				(display (aref movers i))
-				(check_edges (aref movers i))))))
-
-
-(bind-val test vec 2)
-
-(xtmX (vec2_set test 1.0 2.0))
-
-(bind-val test2 vec 2)
-
-(xtmX (vec2_set test2 test))
-
-
-(xtmX (pref (tref (aref movers 1) 1) 0))
+					(update (aref movers i))
+					(display (aref movers i))
+					(check_edges (aref movers i))))))
