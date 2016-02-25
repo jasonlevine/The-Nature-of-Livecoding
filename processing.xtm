@@ -178,12 +178,28 @@
     (nvgStroke vg)))
 
 ;; rectangle
+
+(bind-val CORNER i1 0)
+(bind-val CENTER i1 1)
+(bind-val RECTMODE i1 CORNER)
+
+(bind-func rect_mode
+	(lambda (mode:i1)
+		(set! RECTMODE mode)
+		void))
+
 (bind-func rectangle
 	(lambda (x:float y w h)
 		(nvgBeginPath vg)
-    (nvgRect vg x y w h)
+		(cond ((= RECTMODE CORNER) (nvgRect vg x y w h)
+					(= RECTMODE CENTER) 
+						(nvgRect vg 
+							(- x (* width 0.5))
+							(- y (* height 0.5))
+							w h)))
     (nvgFill vg)
-    (nvgStroke vg)))
+    (nvgStroke vg)
+		void))
 
 ;; line
 (bind-func line
@@ -218,6 +234,9 @@
   (lambda (x:float y)
     (nvgTranslate vg x y)))
 
+(bind-func rotate
+	(lambda (degrees:float)
+		(nvgRotate vg degrees)))
 
 ;; ------MOUSE------
 (bind-func mouse_x

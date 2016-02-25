@@ -1,0 +1,35 @@
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(sys:load "The-Nature-of-Livecoding/processing.xtm")
+
+(bind-val angle float 0.0)
+(bind-val aVelocity float 0.0)
+(bind-val aAcceleration float 0.0001)
+
+(bind-func draw
+	(lambda ()
+		(background 255)
+		(rect_mode CORNER)
+		(nostroke)
+		(fill 255 5)
+		(rectangle 0. 0. width height)
+		
+		(fill 127)
+		(stroke 0)
+		
+		(translate (* width 0.5) (* height 0.5))
+		(rect_mode CENTER)
+		(rotate angle)
+		(stroke 0)
+		(stroke_width 2.)
+		(fill 127)
+		(line -60. 0. 60. 0.)
+		(circle 60. 0. 16.)
+		(circle -60. 0. 16.)
+
+		(set! angle (+ angle aVelocity))
+		(set! aVelocity (+ aVelocity aAcceleration))
+
+		void))
+		
