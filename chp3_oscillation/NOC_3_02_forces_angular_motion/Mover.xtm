@@ -1,0 +1,41 @@
+
+;; Mover data type: location, velocity, accleration, mass, 
+;; angle, aVelocity, aAcceleration 
+(bind-type Mover <vec2*,vec2*,vec2*,float,float,float,float>)
+
+;; Constructor
+(bind-func Mover:[Mover*,float,float,float]*
+  (lambda (mass x y)
+    (Mover:[Mover*,vec2*,vec2*,vec2*,float,float,float,float] 
+      (vec2 x y) 
+      (vec2 0. 0.) 
+      (vec2 0. 0.) 
+      mass 0. 0. 0.)))
+
+(bind-func apply_force
+  (lambda (m:Mover* force:vec2*)
+      (v2div force (tref m 3))
+      (v2inc (tref m 2) force)))
+
+(bind-func update
+  (lambda (m:Mover*)
+      (v2inc (tref m 1) (tref m 2)) ;; add acc to vel
+      (v2inc (tref m 0) (tref m 1)) ;; add vel to loc
+
+			(tset! m 6 (/ (getx (tref m 2)) 10.)) ;; aAcc = acc/10
+			(tset! m 5 (+ (tref m 5) (tref m 6))) ;; add aAcc to aVel
+			(constrain (tref m 5) -0.1 0.1)
+			(tset! m 4 (+ (tref m 4) (tref m 5)))
+
+      (v2scale (tref m 2) 0.)))
+
+(bind-func display
+  (lambda (m:Mover*)
+    (stroke 0)
+    (fill 127 200)
+		(rect_mode CENTER)
+		(nvgResetTransform vg)
+		(translate (tref m 0)) ;; location
+		(rotate (tref m 4)) ;;angle
+    (rectangle 0. 0. (* (tref m 3) 16.) (* (tref m 3) 16.))
+))

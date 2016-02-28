@@ -191,16 +191,29 @@
 (bind-func rectangle
 	(lambda (x:float y w h)
 		(nvgBeginPath vg)
-		(cond ((= RECTMODE CORNER) (nvgRect vg x y w h)
-					(= RECTMODE CENTER) 
+		(cond ((= RECTMODE CORNER) (nvgRect vg x y w h))
+					((= RECTMODE CENTER) 
 						(nvgRect vg 
-							(- x (* width 0.5))
-							(- y (* height 0.5))
+							(- x (* w 0.5))
+							(- y (* h 0.5))
 							w h)))
     (nvgFill vg)
     (nvgStroke vg)
 		void))
 
+(bind-func rectangle
+	(lambda (x:float y size)
+	(rectangle:[void,float,float,float,float]* x y size size)))
+
+(bind-func rectangle
+	(lambda (pos:vec2* w h)
+		(rectangle:[void,float,float,float,float]*
+			(getx pos) (gety pos) w h)))
+
+(bind-func rectangle
+	(lambda (pos:vec2* size:float)
+		(rectangle:[void,float,float,float,float]*
+			(getx pos) (gety pos) size size)))
 ;; line
 (bind-func line
   (lambda (x1:float y1 x2 y2)
@@ -230,9 +243,15 @@
 
 
 ;; Transformations
+
+
 (bind-func translate
   (lambda (x:float y)
     (nvgTranslate vg x y)))
+
+(bind-func translate
+  (lambda (pos:vec2*)
+    (nvgTranslate vg (getx pos) (gety pos))))
 
 (bind-func rotate
 	(lambda (degrees:float)

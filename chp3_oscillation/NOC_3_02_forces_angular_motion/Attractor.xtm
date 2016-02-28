@@ -1,0 +1,52 @@
+; // Attraction
+; // Daniel Shiffman <http://www.shiffman.net>
+
+; // A class for a draggable attractive body in our world
+
+; class Attractor {
+;   float mass;    // Mass, tied to size
+;   float G;       // Gravitational Constant
+;   PVector location;   // Location
+;
+; Ported to Extempore by Jason Levine
+; location mass g
+(bind-type Attractor <vec2*,float,float>)
+
+(bind-func Attractor
+	(lambda ()
+		(let ((location:vec2* (vec2 (/ width 2.) (/ height 2.)))
+					(mass:float 20.)
+					(G:float 0.4))
+			(Attractor:[Attractor*,vec2*,float,float]*
+			  location mass G))))
+
+(bind-func attract
+	(lambda (a:Attractor* m:Mover*)
+		(let ((force:vec2* (zalloc))
+					(a_location:vec2* (salloc))
+					(m_location:vec2* (salloc)))
+
+			(v2set a_location (tref a 0))
+			(v2set m_location (tref m 0))
+			(v2set force (v2sub a_location m_location))
+
+			(let ((d:float (magnitude force))
+						(a_mass:float (tref a 1))
+						(m_mass:float (tref m 3))
+						(G:float (tref a 2)))
+
+				(set! d (constrain d 5. 25.))
+				(normalize force)
+
+				(let ((strength:float (/ (* G a_mass m_mass) (* d d))))
+					(v2scale force strength)
+					force)))))
+
+(bind-func display
+	(lambda (a:Attractor*)
+		(stroke_width 4.)
+		(stroke 0)
+		(fill 127)
+		(circle (tref a 0) (* (tref a 1) 2.))))
+
+

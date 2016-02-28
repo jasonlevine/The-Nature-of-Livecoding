@@ -59,6 +59,12 @@
           (- (gety v1) (gety v2)))))
       diff)))
 
+(bind-func xtm_division:[vec2*,vec2*,float]*
+	(lambda (v1 d)
+		(let ((vdiv:vec2* (zalloc)))
+			(v2set vdiv (/ (getx v1) d) (/ (gety v1) d))
+			vdiv)))
+
 ;;vector arithmetic mutable
 (bind-func v2inc
   (lambda (v1:vec2* v2:vec2*)
@@ -93,6 +99,7 @@
       (vnormalise vec 2 vec)
       (v2set v1 (pref vec 0) (pref vec 1)))))
 
+
  (bind-func limit:[void,vec2*,float]*
    (lambda (v1:vec2* lim:float)
      (if (> (magnitude v1) lim)
@@ -100,6 +107,20 @@
          (normalize v1)
          (v2scale v1 lim))) 
        void))
+
+
+ ;(bind-func constrain:[void,vec2*,float,float]*
+ ;  (lambda (v1:vec2* min:float max:float)
+ ;    (cond 
+ ; 		((> (magnitude v1) max)
+ ;      (begin 
+ ;        (normalize v1)
+ ;        (v2scale v1 max)))
+ ; 		((< (magnitude v1) min)
+ ; 			(begin
+ ; 				(normalize v1)
+ ; 				(v2scale v1 min))))
+ ;      void))
 
 ;; functions
 (bind-func distance:[float,float,float,float,float]*

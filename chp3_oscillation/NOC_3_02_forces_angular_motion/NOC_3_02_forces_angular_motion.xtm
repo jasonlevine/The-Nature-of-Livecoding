@@ -1,0 +1,43 @@
+(bind-val width float 800.)
+(bind-val height float 200.)
+
+(define NOC-path
+	(lambda (path)
+	  (string-append "The-Nature-of-Livecoding/" path)))
+
+(define data-path
+	(lambda (path)
+		(string-append (NOC-path "chp3_oscillation/NOC_3_02_forces_angular_motion/") path)))
+
+(sys:load (NOC-path "processing.xtm"))
+(sys:load (data-path "Mover.xtm"))
+(sys:load (data-path "Attractor.xtm"))
+
+(bind-val movers |20,Mover*|*)
+(bind-val attractor Attractor*)
+
+(bind-func setup
+	(lambda ()
+		(set! attractor (Attractor))
+		(doloop (i 20)
+			(aset! movers i 
+				(Mover
+					(rand 0.1 2.0)
+					(rand width)
+					(rand height))))))
+
+(setup)
+
+(bind-func draw
+	(lambda ()
+		(background 255)
+		(display attractor)
+
+		(doloop (i 20)
+			(let ((force:vec2* (attract attractor (aref movers i))))
+				(apply_force (aref movers i) force))
+
+			(update (aref movers i))
+			(display (aref movers i)))
+
+			void))
