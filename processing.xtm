@@ -18,7 +18,7 @@
 (bind-func background
 	(lambda (gray:i32)
     (let ((grayf:float  (/ (i32tof gray) 255.)))
-		      (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))
+		      (nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))
       (nvgBeginPath vg)
       (nvgRect vg 0. 0. width height)
       (nvgFill vg)))
@@ -29,7 +29,7 @@
     (let ((redf:float  (/ (i32tof r) 255.))
       (greenf:float  (/ (i32tof g) 255.))
       (bluef:float  (/ (i32tof b) 255.)))
-      (_nvgFillColor vg (NVGcolor redf greenf bluef 1.0)))
+      (nvgFillColor vg (NVGcolor redf greenf bluef 1.0)))
     (nvgBeginPath vg)
     (nvgRect vg 0. 0. width height)
     (nvgFill vg)))
@@ -41,7 +41,7 @@
       (greenf:float  (/ (i32tof g) 255.))
       (bluef:float  (/ (i32tof b) 255.))
       (alphaf:float  (/ (i32tof a) 255.)))
-      (_nvgFillColor vg (NVGcolor redf greenf bluef alphaf)))
+      (nvgFillColor vg (NVGcolor redf greenf bluef alphaf)))
     (nvgBeginPath vg)
     (nvgRect vg 0. 0. width height)
     (nvgFill vg)))
@@ -51,7 +51,7 @@
   (lambda (gray:i32 alpha)
     (let ((grayf:float  (/ (i32tof gray) 255.))
           (alphaf:float  (/ (i32tof alpha) 255.)))
-      (_nvgFillColor vg (NVGcolor grayf grayf grayf alphaf)))
+      (nvgFillColor vg (NVGcolor grayf grayf grayf alphaf)))
       (nvgBeginPath vg)
       (nvgRect vg 0. 0. width height)
       (nvgFill vg)))
@@ -59,7 +59,7 @@
 ;; bg rgb float
 (bind-func background
   (lambda (r:float g b)
-    (_nvgFillColor vg (NVGcolor r g b 1.0))
+    (nvgFillColor vg (NVGcolor r g b 1.0))
     (nvgBeginPath vg)
     (nvgRect vg 0. 0. width height)
     (nvgFill vg)))
@@ -67,19 +67,19 @@
 ;;bg rgba float
 (bind-func background
   (lambda (r:float g b a)
-    (_nvgFillColor vg (NVGcolor r g b a))
+    (nvgFillColor vg (NVGcolor r g b a))
     (nvgBeginPath vg)
     (nvgRect vg 0. 0. width height)
     (nvgFill vg)))
 
- 
-;; fill rgb 
+
+;; fill rgb
 (bind-func fill
  (lambda (r:i32 g b)
   (let ((redf:float  (/ (i32tof r) 255.))
         (greenf:float  (/ (i32tof g) 255.))
         (bluef:float  (/ (i32tof b) 255.)))
-    (_nvgFillColor vg (NVGcolor redf greenf bluef 1.0)))))
+    (nvgFillColor vg (NVGcolor redf greenf bluef 1.0)))))
 
 ;;fill rgba
 (bind-func fill
@@ -88,27 +88,27 @@
         (greenf:float  (/ (i32tof g) 255.))
         (bluef:float  (/ (i32tof b) 255.))
         (alphaf:float  (/ (i32tof a) 255.)))
-    (_nvgFillColor vg (NVGcolor redf greenf bluef alphaf)))))
+    (nvgFillColor vg (NVGcolor redf greenf bluef alphaf)))))
 
 
 ;; fill gray
 (bind-func fill
   (lambda (gray:i32)
    (let ((grayf:float  (/ (i32tof gray) 255.)))
-    (_nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))))
+    (nvgFillColor vg (NVGcolor grayf grayf grayf 1.0)))))
 
 ;; fill gray alpha
 (bind-func fill
   (lambda (gray:i32 alpha:i32)
     (let ((grayf:float  (/ (i32tof gray) 255.))
           (alphaf:float (/ (i32tof alpha) 255.)))
-      (_nvgFillColor vg (NVGcolor grayf grayf grayf alphaf)))))
+      (nvgFillColor vg (NVGcolor grayf grayf grayf alphaf)))))
 
 
 ;; fill rgba float
 (bind-func fill
   (lambda (r:float g b a)
-    (_nvgFillColor vg (NVGcolor r g b a))))    
+    (nvgFillColor vg (NVGcolor r g b a))))
 
 
 (bind-func nofill
@@ -116,13 +116,13 @@
     (fill 0.0 0.0 0.0 0.0)))
 
 
-;; stroke rgb 
+;; stroke rgb
 (bind-func stroke
  (lambda (r:i32 g b)
   (let ((redf:float  (/ (i32tof r) 255.))
         (greenf:float  (/ (i32tof g) 255.))
         (bluef:float  (/ (i32tof b) 255.)))
-    (_nvgStrokeColor vg (NVGcolor redf greenf bluef 1.0)))))
+    (nvgStrokeColor vg (NVGcolor redf greenf bluef 1.0)))))
 
 ;;stroke rgba
 (bind-func stroke
@@ -131,27 +131,27 @@
         (greenf:float  (/ (i32tof g) 255.))
         (bluef:float  (/ (i32tof b) 255.))
         (alphaf:float  (/ (i32tof a) 255.)))
-    (_nvgStrokeColor vg (NVGcolor redf greenf bluef alphaf)))))
+    (nvgStrokeColor vg (NVGcolor redf greenf bluef alphaf)))))
 
 
 ;; stroke gray
 (bind-func stroke
   (lambda (gray:i32)
    (let ((grayf:float  (/ (i32tof gray) 255.)))
-    (_nvgStrokeColor vg (NVGcolor grayf grayf grayf 1.0)))))
+    (nvgStrokeColor vg (NVGcolor grayf grayf grayf 1.0)))))
 
 ;; stroke gray alpha
 (bind-func stroke
   (lambda (gray:i32 alpha:i32)
     (let ((grayf:float  (/ (i32tof gray) 255.))
           (alphaf:float (/ (i32tof alpha) 255.)))
-      (_nvgStrokeColor vg (NVGcolor grayf grayf grayf alphaf)))))
+      (nvgStrokeColor vg (NVGcolor grayf grayf grayf alphaf)))))
 
 
 ;; stroke rgba float
 (bind-func stroke
   (lambda (r:float g b a)
-    (_nvgStrokeColor vg (NVGcolor r g b a))))
+    (nvgStrokeColor vg (NVGcolor r g b a))))
 
 (bind-func nostroke
   (lambda ()
@@ -192,8 +192,8 @@
 	(lambda (x:float y w h)
 		(nvgBeginPath vg)
 		(cond ((= RECTMODE CORNER) (nvgRect vg x y w h))
-					((= RECTMODE CENTER) 
-						(nvgRect vg 
+					((= RECTMODE CENTER)
+						(nvgRect vg
 							(- x (* w 0.5))
 							(- y (* h 0.5))
 							w h)))
@@ -304,9 +304,9 @@
     (nvgResetTransform vg)
     (draw)
     (nvgEndFrame vg)
-    (set! frame (+ frame 1)) 
+    (set! frame (+ frame 1))
     (glfwPollEvents)
-    (glfwSwapBuffers window) 
+    (glfwSwapBuffers window)
     (let ((next_time (+ time (convert (* 44100. delta_t)))))
       (callback next_time nvg_draw_loop next_time delta_t)))))
 
@@ -319,4 +319,3 @@
 ;;   (lambda (time:i64 delta_t:double)
 ;;     (println "nvg_draw_loop callback stopped")
 ;;     #f))
-
